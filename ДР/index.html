@@ -1,0 +1,3861 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>> ACCESS TERMINAL ✦ ПРЕМИУМ</title>
+    <style>
+        /* ========== СБРОС И БАЗОВЫЕ СТИЛИ ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            overflow: hidden;
+            height: 100%;
+            position: relative;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            position: relative;
+            overflow-x: hidden;
+            transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                        color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #app {
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* ========== ПРЕМИУМ ПАРАЛЛАКС ФОН ========== */
+        .premium-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .gradient-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: sphereFloat 30s ease-in-out infinite;
+        }
+
+        .sphere-1 {
+            width: 80vmax;
+            height: 80vmax;
+            top: -20%;
+            right: -20%;
+            background: radial-gradient(circle at 30% 50%, 
+                        rgba(255, 105, 180, 0.3) 0%, 
+                        rgba(147, 112, 219, 0.2) 40%, 
+                        transparent 70%);
+            animation-delay: -5s;
+        }
+
+        .sphere-2 {
+            width: 100vmax;
+            height: 100vmax;
+            bottom: -30%;
+            left: -20%;
+            background: radial-gradient(circle at 70% 50%, 
+                        rgba(255, 182, 193, 0.25) 0%, 
+                        rgba(255, 105, 180, 0.2) 40%, 
+                        transparent 70%);
+            animation-delay: -10s;
+        }
+
+        .sphere-3 {
+            width: 70vmax;
+            height: 70vmax;
+            top: 10%;
+            left: 10%;
+            background: radial-gradient(circle at 50% 50%, 
+                        rgba(255, 20, 147, 0.2) 0%, 
+                        rgba(255, 105, 180, 0.15) 30%, 
+                        transparent 60%);
+            animation-delay: -15s;
+        }
+
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 105, 180, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 105, 180, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridPulse 8s ease-in-out infinite;
+        }
+
+        .noise-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-radial-gradient(circle at 30% 30%, 
+                        rgba(255, 255, 255, 0.02) 0%, 
+                        transparent 5%),
+                        repeating-linear-gradient(45deg, 
+                        rgba(0, 0, 0, 0.02) 0px, 
+                        rgba(0, 0, 0, 0.02) 2px, 
+                        transparent 2px, 
+                        transparent 8px);
+            opacity: 0.3;
+            pointer-events: none;
+            animation: noiseShift 10s steps(10) infinite;
+            mix-blend-mode: overlay;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><circle cx="10" cy="10" r="1" fill="%23ff69b4"/><circle cx="90" cy="30" r="1.5" fill="%23ff69b4"/><circle cx="30" cy="80" r="1" fill="%23ff69b4"/><circle cx="70" cy="20" r="2" fill="%23ff69b4"/><circle cx="50" cy="60" r="1" fill="%23ff69b4"/></svg>');
+            background-size: 200px 200px;
+            animation: parallaxMove 40s linear infinite;
+            opacity: 0.2;
+        }
+
+        .parallax-layer-2 {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><circle cx="20" cy="20" r="2" fill="%23ff1493"/><circle cx="80" cy="70" r="1.5" fill="%23ff1493"/><circle cx="40" cy="90" r="1" fill="%23ff1493"/><circle cx="60" cy="40" r="2" fill="%23ff1493"/></svg>');
+            background-size: 300px 300px;
+            animation: parallaxMove 60s linear infinite reverse;
+            opacity: 0.15;
+        }
+
+        @keyframes sphereFloat {
+            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(5%, 3%) scale(1.1) rotate(120deg); }
+            66% { transform: translate(-3%, 5%) scale(0.9) rotate(240deg); }
+        }
+
+        @keyframes gridPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.01); }
+        }
+
+        @keyframes noiseShift {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-1%, -1%); }
+            20% { transform: translate(1%, 1%); }
+            30% { transform: translate(-2%, 0); }
+            40% { transform: translate(2%, 2%); }
+            50% { transform: translate(0, -2%); }
+            60% { transform: translate(-1%, 2%); }
+            70% { transform: translate(1%, -1%); }
+            80% { transform: translate(-2%, -2%); }
+            90% { transform: translate(2%, 1%); }
+        }
+
+        @keyframes parallaxMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 200px 200px; }
+        }
+
+        /* ========== ПРЕМИУМ КОМПОНЕНТЫ ========== */
+        .glass-card {
+            background: rgba(20, 10, 20, 0.4);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 105, 180, 0.2);
+            border-radius: 32px;
+            box-shadow: 
+                0 20px 40px -15px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 105, 180, 0.1) inset,
+                0 0 30px rgba(255, 105, 180, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, 
+                        rgba(255, 255, 255, 0.05) 0%, 
+                        transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .glass-card:hover,
+        .glass-card:active,
+        .glass-card:focus {
+            background: rgba(20, 10, 20, 0.4);
+            border-color: rgba(255, 105, 180, 0.2);
+            box-shadow: 
+                0 20px 40px -15px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 105, 180, 0.1) inset,
+                0 0 30px rgba(255, 105, 180, 0.1);
+            transform: none;
+        }
+
+        .glass-card:hover::before {
+            opacity: 0;
+        }
+
+        .glass-card-deep {
+            background: rgba(15, 5, 15, 0.6);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 1px solid rgba(255, 105, 180, 0.15);
+            border-radius: 40px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 105, 180, 0.1) inset;
+        }
+
+        .neon-border {
+            position: relative;
+            border-radius: 32px;
+            overflow: hidden;
+        }
+
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                #ff69b4, #ff1493, #ff69b4, #ff1493, #ff69b4);
+            background-size: 400% 400%;
+            border-radius: 34px;
+            animation: gradientShift 6s ease infinite;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+        }
+
+        .neon-border:hover::before {
+            opacity: 0;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .shine-effect {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shine-effect::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transform: rotate(25deg);
+            animation: shine 6s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -60%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .premium-button {
+            background: linear-gradient(135deg, 
+                rgba(255, 105, 180, 0.2) 0%, 
+                rgba(255, 20, 147, 0.3) 100%);
+            border: 1.5px solid rgba(255, 105, 180, 0.4);
+            border-radius: 60px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 
+                0 10px 20px -8px rgba(255, 105, 180, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+        }
+
+        .premium-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: left 0.5s;
+        }
+
+        .premium-button:hover {
+            transform: none;
+            border-color: rgba(255, 105, 180, 0.4);
+            box-shadow: 
+                0 10px 20px -8px rgba(255, 105, 180, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+        }
+
+        .premium-button:hover::before {
+            left: -100%;
+        }
+
+        .premium-button:active {
+            transform: scale(0.98);
+        }
+
+        .floating-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ff69b4;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ff69b4;
+            animation: particleFloat 15s linear infinite;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100vh) scale(2);
+                opacity: 0;
+            }
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ff69b4, #ff1493, #ff69b4);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: textShine 3s linear infinite;
+        }
+
+        @keyframes textShine {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .glitch-text {
+            position: relative;
+            animation: glitch 5s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); text-shadow: 0 0 10px #ff69b4; }
+            10% { transform: translate(-2px, 1px); text-shadow: -3px 0 #ff69b4, 3px 0 #00ffff; }
+            11% { transform: translate(2px, -1px); text-shadow: 3px 0 #ff69b4, -3px 0 #00ffff; }
+            12% { transform: translate(0); text-shadow: 0 0 10px #ff69b4; }
+        }
+
+        .typing-animation {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid #ff69b4;
+            animation: typing 4s steps(40, end), blinkCursor 1s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blinkCursor {
+            from, to { border-color: transparent; }
+            50% { border-color: #ff69b4; }
+        }
+
+        .stagger-fade-in > * {
+            opacity: 0;
+            animation: slideIn 0.5s cubic-bezier(0.215, 0.610, 0.355, 1) forwards;
+        }
+
+        .stagger-fade-in > *:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-fade-in > *:nth-child(2) { animation-delay: 0.15s; }
+        .stagger-fade-in > *:nth-child(3) { animation-delay: 0.2s; }
+        .stagger-fade-in > *:nth-child(4) { animation-delay: 0.25s; }
+        .stagger-fade-in > *:nth-child(5) { animation-delay: 0.3s; }
+        .stagger-fade-in > *:nth-child(6) { animation-delay: 0.35s; }
+        .stagger-fade-in > *:nth-child(7) { animation-delay: 0.4s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .hover-lift:hover {
+            transform: none;
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .binary-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.08;
+            pointer-events: none;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            line-height: 1.2;
+            color: #ff69b4;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity 3s, color 3s;
+        }
+
+        .binary-column {
+            position: absolute;
+            top: -300px;
+            width: 25px;
+            text-align: center;
+            animation: fall linear infinite;
+            text-shadow: 0 0 5px currentColor;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(0); }
+            to { transform: translateY(200vh); }
+        }
+
+        .terminal {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            width: 90%;
+            max-width: 500px;
+            border: 2px solid #0f0;
+            padding: 15px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.2);
+            transition: all 3s;
+            margin: 0 auto;
+            border-radius: 20px;
+        }
+
+        .terminal.melting {
+            border-color: #ff69b4;
+            box-shadow: 0 0 60px rgba(255, 105, 180, 0.4);
+            opacity: 0.9;
+            transform: scale(0.95) rotate(0.5deg);
+            filter: blur(1px);
+        }
+
+        .line {
+            color: inherit;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .system {
+            color: inherit;
+            font-size: 12px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .input-line {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .prompt {
+            color: inherit;
+            font-size: 16px;
+        }
+
+        input {
+            background: #000;
+            border: 1px solid currentColor;
+            color: inherit;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            padding: 6px 10px;
+            width: 180px;
+            outline: none;
+            flex: 1;
+            min-width: 150px;
+            border-radius: 30px;
+        }
+
+        input:focus {
+            background: #111;
+        }
+
+        .error {
+            border-color: #f00;
+            color: #f00;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid currentColor;
+            margin: 10px 0;
+            opacity: 0.3;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 15px;
+            background: #111;
+            border: 1px solid currentColor;
+            margin: 15px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: currentColor;
+            transition: width 0.1s linear;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: progressShine 2s infinite;
+        }
+
+        @keyframes progressShine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .soft-screen {
+            background: transparent;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-y: visible;
+            position: relative;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            -webkit-overflow-scrolling: touch;
+            z-index: 5;
+        }
+
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            display: block;
+        }
+
+        .heart-particle {
+            position: absolute;
+            bottom: -30px;
+            color: rgba(255, 105, 180, 0.4);
+            font-size: 18px;
+            animation: floatHeart linear infinite;
+            text-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+            filter: blur(0.3px);
+        }
+
+        @keyframes floatHeart {
+            0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
+            10% { opacity: 0.5; }
+            50% { opacity: 0.4; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) rotate(360deg) scale(1.1); opacity: 0; }
+        }
+
+        .pulse-dots {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.3;
+            display: block;
+        }
+
+        .pulse-dot {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #ff69b4;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff69b4;
+            animation: pulseDot 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.8); }
+            100% { opacity: 0.2; transform: scale(1); }
+        }
+
+        .moving-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.15;
+            display: block;
+        }
+
+        .line-particle {
+            position: absolute;
+            width: 1px;
+            height: 80px;
+            background: linear-gradient(to bottom, transparent, #ff69b4, transparent);
+            animation: moveLine 12s linear infinite;
+        }
+
+        @keyframes moveLine {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(100vh); }
+        }
+
+        .soft-card {
+            background: rgba(42, 42, 42, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 25px 20px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.3);
+            text-align: center;
+            border: 2px solid rgba(255, 105, 180, 0.4);
+            margin: 10px auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Стили для сообщений (такие же как главное меню) */
+        .message-card {
+            background: rgba(42, 42, 42, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 30px 25px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.3);
+            border: 2px solid rgba(255, 105, 180, 0.4);
+            margin: 10px auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .message-title {
+            font-size: 28px;
+            color: #ff69b4;
+            margin-bottom: 25px;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+        }
+
+        .message-text {
+            color: white;
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            white-space: pre-line;
+            text-align: left;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .message-text p {
+            margin-bottom: 15px;
+        }
+
+        .message-button {
+            background: linear-gradient(135deg, 
+                rgba(255, 105, 180, 0.2) 0%, 
+                rgba(255, 20, 147, 0.3) 100%);
+            border: 1.5px solid rgba(255, 105, 180, 0.4);
+            border-radius: 60px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            margin: 15px auto;
+            display: block;
+            max-width: 280px;
+            width: 100%;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 10px 20px -8px rgba(255, 105, 180, 0.3);
+        }
+
+        .message-button:hover {
+            transform: scale(1.02);
+            border-color: rgba(255, 105, 180, 0.8);
+            box-shadow: 0 20px 30px -10px rgba(255, 105, 180, 0.5);
+        }
+
+        .message-button:active {
+            transform: scale(0.98);
+        }
+
+        .message-button.secondary {
+            background: transparent;
+            border-color: #ff69b4;
+            color: #ff69b4;
+        }
+
+        .message-button.secondary:hover {
+            background: rgba(255, 105, 180, 0.1);
+        }
+
+        .soft-title {
+            font-size: 32px;
+            color: #ff69b4;
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+        }
+
+        .soft-text {
+            font-size: 16px;
+            line-height: 1.5;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .game-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .game-button {
+            background: rgba(60, 60, 60, 0.9);
+            backdrop-filter: blur(5px);
+            border: 2px solid #ff69b4;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            padding: 12px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 15px rgba(255, 105, 180, 0.2);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .game-button:hover {
+            background: rgba(60, 60, 60, 0.9);
+            border-color: #ff69b4;
+            transform: none;
+        }
+
+        .game-button:active {
+            transform: scale(0.98);
+            background: rgba(255, 105, 180, 0.5);
+        }
+
+        .game-badge {
+            background: #ff69b4;
+            color: white;
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-size: 12px;
+        }
+
+        .final-button {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .final-button:hover {
+            background: #ff69b4;
+            transform: none;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+        }
+
+        .final-button:active {
+            transform: scale(0.98);
+            background: #ff69b4;
+        }
+
+        .final-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .digit-display {
+            font-size: 20px;
+            color: #ff69b4;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(60, 60, 60, 0.8);
+            border-radius: 40px;
+            border: 1px dashed #ff69b4;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 3px;
+        }
+
+        .heart-icon {
+            font-size: 24px;
+            animation: pulse 1.5s infinite;
+            color: #ff69b4;
+        }
+
+        .game-container {
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: rgba(60, 60, 60, 0.85);
+            backdrop-filter: blur(5px);
+            padding: 12px 15px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 105, 180, 0.4);
+        }
+
+        .game-title {
+            font-size: 18px;
+            color: #ff69b4;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(255, 105, 180, 0.5);
+        }
+
+        .digit-box {
+            background: #ff69b4;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 3px 15px rgba(255, 105, 180, 0.4);
+        }
+
+        .progress-box {
+            background: #ff69b4;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 3px 15px rgba(255, 105, 180, 0.4);
+        }
+
+        .card {
+            background: rgba(60, 60, 60, 0.85);
+            backdrop-filter: blur(5px);
+            border-radius: 30px;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 30px rgba(255, 105, 180, 0.2);
+            text-align: center;
+            border: 2px solid rgba(255, 105, 180, 0.3);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-category {
+            font-size: 14px;
+            color: #ff69b4;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .card-emoji {
+            font-size: 48px;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0); }
+        }
+
+        .card-text {
+            font-size: 22px;
+            line-height: 1.4;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .card-desc {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+        }
+
+        .counter {
+            font-size: 16px;
+            color: #ff69b4;
+            margin: 15px 0;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .nav-btn {
+            background: rgba(60, 60, 60, 0.9);
+            border: 2px solid #ff69b4;
+            color: #ff69b4;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 15px rgba(255, 105, 180, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .nav-btn:hover {
+            background: rgba(60, 60, 60, 0.9);
+            border-color: #ff69b4;
+            color: #ff69b4;
+            transform: none;
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 105, 180, 0.5);
+            color: white;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .get-digit-btn {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 5px 25px rgba(255, 105, 180, 0.4);
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .get-digit-btn:hover {
+            background: #ff69b4;
+            transform: none;
+            box-shadow: 0 5px 25px rgba(255, 105, 180, 0.4);
+        }
+
+        .get-digit-btn:active {
+            transform: scale(0.98);
+            background: #ff69b4;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 2px solid #ff69b4;
+            color: #ff69b4;
+            padding: 10px 25px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 15px auto;
+            display: inline-block;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .back-btn:hover {
+            background: transparent;
+            border-color: #ff69b4;
+            color: #ff69b4;
+            transform: none;
+        }
+
+        .back-btn:active {
+            transform: scale(0.98);
+            background: rgba(255, 105, 180, 0.5);
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .fact-card {
+            background: rgba(60, 60, 60, 0.85);
+            backdrop-filter: blur(5px);
+            border-radius: 30px;
+            padding: 25px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 30px rgba(255, 105, 180, 0.2);
+            text-align: center;
+            border: 2px solid rgba(255, 105, 180, 0.3);
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .fact-number {
+            font-size: 14px;
+            color: #ff69b4;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        .fact-text {
+            font-size: 20px;
+            line-height: 1.5;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .truth-btn, .lie-btn {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: bold;
+            border: 2px solid;
+            background: rgba(60, 60, 60, 0.9);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .truth-btn {
+            border-color: #4caf50;
+            color: #4caf50;
+        }
+
+        .truth-btn:hover {
+            background: rgba(60, 60, 60, 0.9);
+            border-color: #4caf50;
+            color: #4caf50;
+            transform: none;
+        }
+
+        .truth-btn:active {
+            transform: scale(0.98);
+            background: rgba(76, 175, 80, 0.5);
+            color: white;
+        }
+
+        .lie-btn {
+            border-color: #f44336;
+            color: #f44336;
+        }
+
+        .lie-btn:hover {
+            background: rgba(60, 60, 60, 0.9);
+            border-color: #f44336;
+            color: #f44336;
+            transform: none;
+        }
+
+        .lie-btn:active {
+            transform: scale(0.98);
+            background: rgba(244, 67, 54, 0.5);
+            color: white;
+        }
+
+        .comment-box {
+            background: rgba(60, 60, 60, 0.85);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #ff69b4;
+            text-align: left;
+            font-size: 16px;
+            line-height: 1.5;
+            color: white;
+            font-style: italic;
+        }
+
+        .next-btn {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 250px;
+            margin: 15px auto;
+            display: block;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .next-btn:hover {
+            background: #ff69b4;
+            transform: none;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+        }
+
+        .next-btn:active {
+            transform: scale(0.98);
+            background: #ff69b4;
+        }
+
+        .error-counter {
+            font-size: 16px;
+            color: #ff69b4;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .error-badge {
+            background: #f44336;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 16px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .option-btn {
+            background: rgba(60, 60, 60, 0.9);
+            border: 2px solid #ff69b4;
+            color: white;
+            font-size: 16px;
+            padding: 12px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .option-btn:hover {
+            background: rgba(60, 60, 60, 0.9);
+            border-color: #ff69b4;
+            color: white;
+            transform: none;
+        }
+
+        .option-btn:active {
+            transform: scale(0.98);
+            background: rgba(255, 105, 180, 0.5);
+            color: white;
+        }
+
+        .option-btn.selected-correct {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+
+        .option-btn.selected-wrong {
+            background: #f44336;
+            color: white;
+            border-color: #f44336;
+        }
+
+        .option-btn.selected-any {
+            background: #ffb6c1;
+            color: white;
+            border-color: #ff69b4;
+        }
+
+        .game-over {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .game-over h2 {
+            font-size: 28px;
+            color: #f44336;
+            margin-bottom: 15px;
+        }
+
+        .game-over p {
+            font-size: 16px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .play-area {
+            position: relative;
+            min-height: 350px;
+            background: rgba(60, 60, 60, 0.85);
+            border-radius: 25px;
+            margin: 15px 0;
+            overflow: hidden;
+            border: 2px solid rgba(255, 105, 180, 0.4);
+            touch-action: manipulation;
+        }
+
+        .target {
+            position: absolute;
+            font-size: 35px;
+            cursor: pointer;
+            transition: transform 0.1s;
+            animation: appear 0.2s ease-out;
+            text-shadow: 0 0 15px currentColor;
+            user-select: none;
+            z-index: 10;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .target:active {
+            transform: scale(1.1);
+        }
+
+        .target.heart {
+            color: #ff4d4d;
+            filter: drop-shadow(0 0 10px #ff4d4d);
+        }
+
+        .target.evil {
+            color: #800080;
+            filter: drop-shadow(0 0 10px #800080);
+            animation: evilShake 0.5s infinite;
+        }
+
+        @keyframes evilShake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(3deg); }
+            75% { transform: rotate(-3deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes appear {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .info-panel {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+            color: white;
+            font-size: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .speed-indicator {
+            color: #ff69b4;
+            font-weight: bold;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(60, 60, 60, 0.85);
+            border-radius: 25px;
+        }
+
+        .option-emoji {
+            background: rgba(60, 60, 60, 0.9);
+            border: 2px solid #ff69b4;
+            border-radius: 15px;
+            padding: 15px;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .option-emoji:hover {
+            background: rgba(60, 60, 60, 0.9);
+            border-color: #ff69b4;
+            transform: none;
+        }
+
+        .option-emoji:active {
+            transform: scale(0.95);
+            background: rgba(255, 105, 180, 0.5);
+            border-color: #ff85b4;
+        }
+
+        .option-emoji.selected-correct {
+            background: #4caf50;
+            border-color: #4caf50;
+            color: white;
+        }
+
+        .option-emoji.selected-wrong {
+            background: #f44336;
+            border-color: #f44336;
+            color: white;
+        }
+
+        .explanation {
+            background: rgba(60, 60, 60, 0.85);
+            border-radius: 20px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 16px;
+            color: white;
+            text-align: center;
+            border-left: 4px solid #ff69b4;
+        }
+
+        .score {
+            font-size: 18px;
+            color: #ff69b4;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .cipher-container {
+            background: rgba(60, 60, 60, 0.85);
+            border-radius: 25px;
+            padding: 25px 20px;
+            margin: 20px 0;
+            text-align: center;
+            border: 2px solid #ff69b4;
+        }
+
+        .cipher-numbers {
+            font-size: 24px;
+            color: #ff69b4;
+            font-weight: bold;
+            letter-spacing: 4px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 105, 180, 0.15);
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            word-break: break-word;
+        }
+
+        .hint {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+            margin: 15px 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .cipher-input {
+            background: rgba(60, 60, 60, 0.85);
+            border: 2px solid #ff69b4;
+            color: white;
+            padding: 12px 15px;
+            font-size: 16px;
+            border-radius: 50px;
+            outline: none;
+            text-align: center;
+        }
+
+        .cipher-input:focus {
+            background: rgba(80, 80, 80, 0.9);
+            border-color: #ff85b4;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            color: #ff69b4;
+            font-size: 14px;
+        }
+
+        .stat-box {
+            background: rgba(255, 105, 180, 0.15);
+            padding: 5px 10px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 105, 180, 0.4);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .controls button {
+            background: rgba(60, 60, 60, 0.9);
+            border: 2px solid #ff69b4;
+            color: #ff69b4;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .controls button:hover {
+            background: rgba(60, 60, 60, 0.9);
+            border-color: #ff69b4;
+            color: #ff69b4;
+            transform: none;
+        }
+
+        .controls button:active {
+            transform: scale(0.98);
+            background: rgba(255, 105, 180, 0.5);
+            color: white;
+        }
+
+        .victory {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(255, 105, 180, 0.15);
+            border-radius: 30px;
+            border: 2px solid #ff69b4;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.3);
+        }
+
+        .victory h2 {
+            font-size: 28px;
+            color: #ff69b4;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px #ff69b4;
+        }
+
+        .victory p {
+            font-size: 16px;
+            color: white;
+            margin: 8px 0;
+        }
+
+        .pickup-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(60, 60, 60, 0.7);
+            border-radius: 20px;
+        }
+
+        .pickup-btn {
+            background: rgba(60, 60, 60, 0.9);
+            border: 2px solid #ff69b4;
+            color: white;
+            padding: 12px 5px;
+            border-radius: 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            text-align: center;
+        }
+
+        .pickup-btn:hover {
+            background: rgba(60, 60, 60, 0.9);
+            border-color: #ff69b4;
+            transform: none;
+        }
+
+        .pickup-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 105, 180, 0.5);
+            border-color: #ff85b4;
+        }
+
+        .pickup-btn.read {
+            background: #ff69b4;
+            color: white;
+            border-color: #ff69b4;
+        }
+
+        .pickup-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .pickup-question {
+            background: rgba(60, 60, 60, 0.85);
+            border-radius: 30px;
+            padding: 30px 20px;
+            margin: 20px 0;
+            border: 2px solid #ff69b4;
+            text-align: center;
+        }
+
+        .pickup-question p {
+            font-size: 20px;
+            color: white;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .action-btn {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px auto;
+            display: inline-block;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            min-width: 150px;
+        }
+
+        .action-btn:hover {
+            background: #ff69b4;
+            transform: none;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+            background: #ff69b4;
+        }
+
+        .action-btn.small {
+            padding: 8px 20px;
+            font-size: 14px;
+            min-width: 100px;
+        }
+
+        .buttons-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .counter-text {
+            font-size: 16px;
+            color: #ff69b4;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .chance-indicator {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #ff69b4;
+            font-size: 14px;
+        }
+
+        .rules-section {
+            text-align: left;
+            margin: 30px 0 20px;
+            padding: 20px;
+            background: rgba(255, 105, 180, 0.1);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 105, 180, 0.3);
+        }
+
+        .rules-title {
+            color: #ff69b4;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .rule-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 105, 180, 0.2);
+        }
+
+        .rule-item:last-child {
+            border-bottom: none;
+        }
+
+        .rule-game {
+            color: #ff69b4;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .rule-text {
+            color: white;
+            font-size: 15px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .game-button {
+                padding: 16px 20px;
+                font-size: 18px;
+                margin: 8px 0;
+            }
+            
+            .premium-button {
+                padding: 18px 30px;
+                font-size: 18px;
+                min-height: 60px;
+            }
+            
+            .nav-btn {
+                width: 70px !important;
+                height: 70px !important;
+                font-size: 32px !important;
+            }
+            
+            .pickup-btn {
+                padding: 16px 8px;
+                font-size: 16px;
+            }
+            
+            .game-container {
+                padding: 15px;
+            }
+            
+            .soft-card {
+                padding: 30px 20px;
+            }
+            
+            .message-card {
+                padding: 30px 20px;
+            }
+            
+            input {
+                padding: 12px 15px;
+                font-size: 16px;
+                min-height: 50px;
+            }
+            
+            .floating-particle,
+            .heart-particle,
+            .line-particle {
+                animation-duration: 30s;
+            }
+            
+            .glass-card,
+            .glass-card-deep,
+            .soft-card,
+            .message-card {
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            }
+            
+            .glass-card,
+            .glass-card-deep,
+            .soft-card,
+            .message-card,
+            .terminal {
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                background: rgba(20, 10, 20, 0.8);
+            }
+            
+            .game-title,
+            .soft-title,
+            .gradient-text,
+            .message-title {
+                text-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
+            }
+            
+            .fact-text,
+            .card-text,
+            .soft-text,
+            .message-text {
+                font-size: 18px;
+                line-height: 1.6;
+            }
+            
+            .digit-box,
+            .progress-box {
+                padding: 8px 20px;
+                font-size: 20px;
+            }
+            
+            .hover-lift:hover,
+            .hover-rotate:hover,
+            .neon-border:hover::before,
+            .shine-effect:hover::after {
+                transform: none;
+                opacity: 0;
+                animation: none;
+            }
+            
+            .pulse {
+                animation: none;
+            }
+            
+            .glitch-text {
+                animation: none;
+                text-shadow: 0 0 10px #ff69b4;
+            }
+            
+            .gradient-text {
+                animation: none;
+                background: linear-gradient(135deg, #ff69b4, #ff1493);
+                -webkit-background-clip: text;
+                background-clip: text;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .game-button {
+                font-size: 16px;
+                padding: 14px 15px;
+            }
+            
+            .game-badge {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+            
+            .soft-title {
+                font-size: 28px;
+            }
+            
+            .message-title {
+                font-size: 24px;
+            }
+            
+            .digit-display {
+                font-size: 18px;
+                padding: 12px;
+            }
+        }
+
+        .soft-screen {
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+
+        .game-menu {
+            max-height: none !important;
+            overflow-y: visible !important;
+        }
+    </style>
+</head>
+<body style="background: #000; color: #0f0;">
+    <!-- ПРЕМИУМ ФОН -->
+    <div class="premium-bg">
+        <div class="gradient-sphere sphere-1"></div>
+        <div class="gradient-sphere sphere-2"></div>
+        <div class="gradient-sphere sphere-3"></div>
+        <div class="grid-overlay"></div>
+        <div class="noise-overlay"></div>
+        <div class="parallax-layer"></div>
+        <div class="parallax-layer-2"></div>
+    </div>
+
+    <!-- ПЛАВАЮЩИЕ ЧАСТИЦЫ -->
+    <div id="particlesContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2;"></div>
+    
+    <!-- БИНАРНЫЙ ДОЖДЬ -->
+    <div class="binary-bg" id="binaryBg"></div>
+    
+    <!-- ПЛАВАЮЩИЕ СЕРДЕЧКИ (7 ШТУК, РАЗ В 2 СЕКУНДЫ) -->
+    <div class="floating-hearts" id="heartsContainer"></div>
+    
+    <!-- ПУЛЬСИРУЮЩИЕ ТОЧКИ -->
+    <div class="pulse-dots" id="pulseDots"></div>
+    
+    <!-- ДВИЖУЩИЕСЯ ЛИНИИ -->
+    <div class="moving-lines" id="movingLines"></div>
+    
+    <!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
+    <div id="app"></div>
+
+    <!-- ========== МУЗЫКА ========== -->
+    <audio id="bgMusic" style="display: none;"></audio>
+
+    <script>
+        // ========== МУЗЫКА ==========
+        const playlist = [
+            'music/1.m4a',
+            'music/2.m4a',
+            'music/3.m4a'
+        ];
+
+        let currentTrack = 0;
+        let musicStarted = false;
+        const audio = document.getElementById('bgMusic');
+
+        function startMusic() {
+            if (musicStarted) return;
+            
+            audio.src = playlist[0];
+            audio.play()
+                .then(() => {
+                    musicStarted = true;
+                    console.log('🎵 Музыка играет');
+                })
+                .catch(e => {
+                    console.log('Не удалось запустить музыку автоматически');
+                    document.addEventListener('click', function playOnClick() {
+                        if (!musicStarted) {
+                            audio.play()
+                                .then(() => {
+                                    musicStarted = true;
+                                    console.log('🎵 Музыка запущена по клику');
+                                })
+                                .catch(err => console.log('Ошибка:', err));
+                        }
+                        document.removeEventListener('click', playOnClick);
+                    }, { once: true });
+                });
+        }
+
+        function playNextTrack() {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            audio.src = playlist[currentTrack];
+            audio.play().catch(e => console.log('Ошибка переключения'));
+        }
+
+        audio.addEventListener('ended', playNextTrack);
+        audio.addEventListener('error', () => {
+            playNextTrack();
+        });
+
+        // ========== ДАННЫЕ ==========
+        const game1Cards = [
+            { category: "ВРЕМЯ ГОДА", emoji: "🍂", text: "Осень", desc: "тёплая, уютная, чуть грустная" },
+            { category: "ПЕСНЯ", emoji: "🎵", text: "Та, что застревает в голове", desc: "как припев Sleep Well или Unslept" },
+            { category: "ИГРА", emoji: "🎮", text: "Как 1-3 части Devil My Cry", desc: "потому что некогда не знаешь чем ты удивишь в следующий раз" },
+            { category: "ЦВЕТОК", emoji: "🌺", text: "Пион", desc: "Ты как махровый пион — в тебе столько слоёв, столько глубины, что можно разглядывать вечно и находить новое." },
+            { category: "НАПИТОК", emoji: "☕", text: "Какао с маршмеллоу", desc: "согревает, успокаивает" },
+            { category: "ФИЛЬМ", emoji: "🎬", text: "Тот, который хочется пересматривать", desc: "даже зная каждый кадр" },
+            { category: "КНИГА", emoji: "📖", text: "Любимая глава", desc: "которую перечитываешь снова и снова" },
+            { category: "ЗВУК", emoji: "😄", text: "Смех", desc: "особенно твой" },
+            { category: "ВРЕМЯ СУТОК", emoji: "🌅", text: "Закат", desc: "когда хочется молчать и быть рядом" },
+            { category: "ОЩУЩЕНИЕ", emoji: "🕯️", text: "Комфорт", desc: "состояние, в котором можно быть собой" }
+        ];
+
+        const game2Facts = [
+            { text: "Я проверяю телефон каждые 10 минут.", correct: false, comment: "На самом деле я проверяю каждые 3 минуты 🤭" },
+            { text: "У меня есть плейлист, который я никому не показываю.", correct: true, comment: "не отрицаю,он есть,но там нечего примечательного" },
+            { text: "Я злюсь, когда ты долго не отвечаешь.", correct: true, comment: "конечно же я злюсь в таких ситуациях" },
+            { text: "Я могу не писать тебе целый день.", correct: false, comment: "Мне хочется писать каждую минуту 😶" },
+            { text: "Я сравнивал тебя с бывшей в плохом смысле.", correct: false, comment: "я тебя с ней не сравнивал никогда, ведь даже невооружёным взглядом видно насколько ты лучше неё" },
+            { text: "Я не жду «сладких снов».", correct: false, comment: "Жду. Если не дождался то утром просыпаюсь злой" },
+            { text: "Я иногда накручиваю себя без причины.", correct: false, comment: "я накручиваю себя без причины 'часто'" },
+            { text: "Я считаю себя умнее большинства окружающих", correct: false, comment: "вряд ли с моей самооценкой я смогу позволить себе такое." },
+            { text: "Я боюсь, что меня не примут таким, какой я есть.", correct: true, comment: "было,но по разному,в основном мне похуй" },
+            { text: "Я злился, когда ты не делилась чем-то со мной первой.", correct: true, comment: "Правда" },
+            { text: "Я боялся показаться слишком навязчивым.", correct: true, comment: "Правда" },
+            { text: "Я писал стихи или прозу, когда был помладше.", correct: true, comment: "Да,и наверное некотрые сохранились в моём старом дневнике" },
+            { text: "Мне важно, чтобы человек отвечал взаимностью на мои усилия в дружбе", correct: true, comment: "Правда,тоже самое касается отношений" },
+            { text: "Я хочу быть тем, на кого ты можешь положиться всегда.", correct: true, comment: "Правда" },
+            { text: " Я боюсь, что не смогу найти своё место в жизни.", correct: true, comment: "Правда" }
+        ];
+
+        const game3Pickups = [
+            { number: 1, question: "Знаешь почему сейчас на небе луна?", answer: "Потому что солнце занято и пишет мне", questionButton: "почему", answerButton: "муа,люблю" },
+            { number: 2, question: "Знаешь почему я сразу пишу тебе когда просыпаюсь?", answer: "Потому что утро надо начинать с прекрасного", questionButton: "Почему?", answerButton: "МОЙ МЕН" },
+            { number: 3, question: "Я конечно не мячик, но прыгаю от счастья когда получаю от тебя сообщения", answer: null, answerButton: "ты ж мой хороший" },
+            { number: 4, question: "Ты конечно не маска, но на моём лице бы отлично смотрелась", answer: null, answerButton: "мне тоже так кажется" },
+            { number: 5, question: "Мне хочется тебя поцеловать, но если не понравится можешь вернуть обратно", answer: null, answerButton: "да я в любом случае верну" },
+            { number: 6, question: "Я конечно плохо понимаю Английский, но когда меня спрашивают что такое Beautiful я всегда отвечаю что это ты", answer: null, answerButton: "муамуа,люблю" },
+            { number: 7, question: "Хочешь увидеть восьмое чудо света?", answer: "Взгляни в зеркало ❤️", type: "yesno", yesButton: "Да", noButton: "Нет", answerButton: "и вправду" },
+            { number: 8, question: "Знаешь что быстрее скорости света?", answer: "Моё сердце когда я думаю о тебе", questionButton: "что?", answerButton: "ну мой 💋" },
+            { number: 9, question: "Тут должен был быть красивый подкат, но из красивого тут только ты", answer: null, answerButton: "вы меня смущаете" },
+            { number: 10, question: "Просто хочу чтоб ты знала, мои губы сами себя не поцелуют", answer: null, answerButton: "Намёк поняла" },
+            { number: 11, question: "Знаешь какой твой главный минус?", answer: "Минусы в математике а ты у меня идеальная", questionButton: "какой?", answerButton: "ой, ну засмущал" },
+            { number: 12, question: "Знаешь на кого ты похожа?", answer: "На время, ведь тебя мне не хватает", questionButton: "На кого?", answerButton: "простите, я исправлюсь🥺" },
+            { number: 13, question: "Знаешь что я делаю когда ты мне присылаешь свои фотки?", answer: "Пытаюсь реже моргать, что бы дольше любоваться тобой", questionButton: "Надеюсь что не дрочишь", answerButton: "Ути моя лапочка" },
+            { number: 14, question: "Ночью тебя греет одеяло, но могли бы мои объятия", answer: null, answerButton: "надо исправлять" },
+            { number: 15, question: "В детстве ты сосала сосульки, а сейчас ты выросла", answer: null, answerButton: "ДАУАЙ БАЛЯ" },
+            { number: 16, question: "Даже самый красивый закат не сравнится с твоей улыбкой", answer: null, answerButton: "вы меня смущаете" },
+            { number: 17, question: "Я не знаю анатомию глаз, но твои точно космос", answer: null, answerButton: "вааай, люблю" },
+            { number: 18, question: "Слушай а твой любимый предмет случайно не геометрия?", answer: "Просто ты прекрасна со всех углов", questionButton: "ненавижу геометрию", answerButton: "хватит меня смущать" },
+            { number: 19, question: "Вчера по новостям говорили что упала звёздочка, ты не ушиблась?", answer: null, answerButton: "немножко" },
+            { number: 20, question: "Ты конечно не ювелирный магазин, но смотря на тебя мне хочется совершить взлом с проникновением", answer: null, answerButton: "ЧТО ЗА ХУЙНЮ ТЫ ПИШЕШЬ?! Продолжай мне нравится…" },
+            { number: 21, question: "Я хочу признаться… у меня серьёзные проблемы с глазами…", answer: "Я не могу оторвать их от тебя", questionButton: "КАКИЕ? ПОЧЕМУ РАНЬШЕ НЕ ГОВОРИЛ?!", answerButton: "Дурак" },
+            { number: 22, question: "Ты конечно не банкомат, но тоже можешь мне скинуть денег", answer: null, answerButton: "да я просто повод искала" },
+            { number: 23, question: "Я конечно не параноик, но от тебя схожу с ума", answer: null, answerButton: "МОЙ МЕН" },
+            { number: 24, question: "А ты случайно не это… блядь забыл… Ты настолько красивая что я и забыл как хотел подкатить к тебе..", answer: null, answerButton: "бедный" },
+            { number: 25, question: "В будущем нам надо экономить воду, поэтому в душ идём вместе", answer: null, answerButton: "ДА ХОТЬ СЕЙЧАС" },
+            { number: 26, question: "У тебя загар или ты всегда так горячо выглядишь?", answer: null, answerButton: "ну вроде загара нет…" },
+            { number: 27, question: "Ты конечно не моя любимая песня, но слушая твои ГС получаю такое же удовольствие", answer: null, answerButton: "ну всё, замуж" },
+            { number: 28, question: "Гагарин покорил космос, а ты моё сердце", answer: null, answerButton: "я старалась" },
+            { number: 29, question: "Если меня вдруг попросят показать что самое ценное у меня есть, я покажу твою фотку", answer: null, answerButton: "МОЙ МЕН" },
+            { number: 30, question: "Ты случайно не свитер? Тогда почему я хочу тебя связать и натянуть?", answer: null, answerButton: "ты давай мне тут не того самого (продолжай мне нравится)" },
+            { number: 31, question: "Если бы все люди в мире могли смотреть на твои глаза как я, то люди бы просто перестали нуждаться в звёздах", answer: null, answerButton: "вы меня смущаете" },
+            { number: 32, question: "Лучше северного сияния может быть только сияние твоих глаз", answer: null, answerButton: "МОЙ МЕН" },
+            { number: 33, question: "Для меня мир прекрасен потому что в нём есть ты", answer: null, answerButton: "Ты ж мой хороший" },
+            { number: 34, question: "К сожалению я могу видеть тебя только до шести, ведь после шести мне нельзя сладкое", answer: null, answerButton: "ну блин(" },
+            { number: 35, question: "Если поцелуй это слово, то у меня к тебе серьёзный разговор", answer: null, answerButton: "мне тоже кажется что нам надо серьёзно поговорить" },
+            { number: 36, question: "Ты случайно не сломанная ручка?", answer: "тогда почему ты мне так мало пишешь?(", questionButton: "ну вроде нет", answerButton: "ИЗВИНИ ХОРОШИЙ МОЙ" },
+            { number: 37, question: "Знаешь почему Да Винчи нарисовал именно Мону Лизу?", answer: "Потому что не смог найти тебя", questionButton: "почему?", answerButton: "да он слепой потому что" },
+            { number: 38, question: "Ты играешь на гитаре?", answer: "Я тоже нет. Видишь, у нас столько общего", questionButton: "Нет", answerButton: "ну всё, замуж" },
+            { number: 39, question: "Умеешь считать?", answer: "Тогда считай что ты моя", questionButton: "ну да", answerButton: "СЛУШАЮСЬ МОЙ ГОСПОДИН" },
+            { number: 40, question: "Даже если весь мир встанет против тебя, то у меня встанет на тебя", answer: null, answerButton: "Фу, покажи" },
+            { number: 41, question: "Ты случайно не металлическая горка летом?", answer: "Тогда почему ты такая горячая?", questionButton: "ну вроде нет", answerButton: "да хватит уже меня смущать (продолжай мне нравится)" },
+            { number: 42, question: "У тебя вообще есть свой дом?", answer: "Тогда почему ты живёшь в моём сердце?", questionButton: "ну вроде бы", answerButton: "ой всё ❤️" },
+            { number: 43, question: "Можешь больше не писать деду морозу", answer: "Потому что я и есть твой лучший подарок", questionButton: "Почему?", answerButton: "по факту" },
+            { number: 44, question: "Ради тебя я готов пожертвовать своим сном, лишь бы побольше времени проводить с тобой", answer: null, answerButton: "Ну мой💋" },
+            { number: 45, question: "Ты конечно не пещера, но я бы в тебя вошёл", answer: null, answerButton: "ЧТО ЗА ХУЙНЮ ТЫ ПИШЕШЬ?! (Продолжай мне нравится…)" }
+        ];
+
+        // ========== ОБНОВЛЁННАЯ ИГРА 4 ==========
+        const game4Questions = [
+            { question: "Как я отношусь к людям с другим мнением?", options: ["Нормально", "Иногда раздражает", "Интересно слушать", "Спорю"], correct: 2 },
+            { question: "Как я обычно реагирую, если кто-то нарушает моё личное пространство?", options: ["Сдерживаюсь", "Сразу раздражаюсь", "Игнорирую", "Говорю прямо"], correct: 3 },
+            { question: "Что я делаю, когда ты долго не отвечаешь?", options: ["Спокоен", "Проверяю сеть", "Паникую", "Всё сразу"], correct: 3 },
+            { question: "Что я люблю в тебе больше всего?", options: ["Глаза", "Смех", "Честность", "Красоту"], correct: 2 },
+            { question: "Мой любимый цвет?", options: ["Красный", "Синий", "Тёмно Зелёный", "Чёрный"], correct: 2 },
+            { question: "Что для меня важнее всего?", options: ["Популярность", "Развитие и самопознание", "Деньги", "Одобрение"], correct: 1, anyAnswer: true },
+            { question: "Моя любимая песня?", options: ["Гимн шута", "Unslept", "Марионетки", "Spit In My Face"], correct: 2 },
+            { question: "Если я пропускаю тренировку, как я себя чувствую?", options: ["Спокойно", "Радуюсь отдыху", "Не замечаю", "Раздражён"], correct: 3 },
+            { question: "Кто чаще пишет первым?", options: ["Я", "Ты", "По ситуации"], correct: 2 },
+            { question: "Мой любимый фильм?", options: ["1+1", "Зелёная книга", "Бойцовский клуб", "Интерстеллар"], correct: 2 },
+            { question: "Что я ненавижу?", options: ["Предательство", "Ложь", "Одиночество", "Холод"], correct: 1, anyAnswer: true },
+            { question: "Что меня раздражает?", options: ["Шум", "Безразличие", "Ожидание", "Ложь"], correct: 0 },
+            { question: "Какую музыку я слушаю?", options: ["Рок", "Поп", "Инди", "Классика"], correct: 0 },
+            { question: "Как я веду себя, если кто-то пытается манипулировать мной?", options: ["Противодействую", "Поддаюсь", "Стараюсь уйти", "Молчу"], correct: 0 },
+            { question: "Что я делаю, если вижу, что кто-то недооценивает мои способности?", options: ["Игнорирую", "Мне похуй", "Злюсь", "Показываю без слов"], correct: 1 },
+            { question: "Какой способ отдыха мне ближе?", options: ["Спокойный дома", "в Зале", "С друзьями", "В путешествиях"], correct: 1 },
+            { question: "Как я обычно реагирую, если что-то идёт не по плану дома?", options: ["Спокойно", "Молчу", "Злюсь", "Пытаюсь сразу исправить"], correct: 2 },
+            { question: "Как я веду себя, если кто-то вмешивается в мои личные дела?", options: ["Выражаю недовольство", "Молчу", "Прощаю", "Делаю вид, что всё нормально"], correct: 0 },
+            { question: "Какая моя самая частая фраза?", options: ["Что случилось?", "Блять", "Ладно", "Пиздец"], anyAnswer: true, correct: 0 },
+            { question: "Как я реагирую, если ты делишься со мной своим днём?", options: ["Сразу обсуждаю", "шучу", "Радуюсь", "Игнорирую"], correct: 2 }
+        ];
+
+        // ========== ОБНОВЛЁННАЯ ИГРА 6 ==========
+        const game6Rounds = [
+            { 
+                items: ["🍎", "🍌", "🍒", "🍉"], 
+                correctItem: "🍉",
+                explanation: "🍉 лишний — арбуз, потому что это ягода, а остальные фрукты" 
+            },
+            { 
+                items: ["🐶", "🐱", "🐮", "🐺"], 
+                correctItem: "🐺",
+                explanation: "🐺 лишний — волк дикий, а остальные домашние животные" 
+            },
+            { 
+                items: ["☀️", "🌙", "⭐", "💡"], 
+                correctItem: "💡",
+                explanation: "💡 лишняя — лампочка, а остальное небесные светила" 
+            },
+            { 
+                items: ["❤️", "💙", "💚", "💔"], 
+                correctItem: "💔",
+                explanation: "💔 лишнее — разбитое сердце, остальные целые" 
+            },
+            { 
+                items: ["🚗", "🚙", "🚕", "🚲"], 
+                correctItem: "🚲",
+                explanation: "🚲 лишний — велосипед двухколёсный, остальные четырёхколёсные машины" 
+            },
+            { 
+                items: ["🎵", "🎹", "🎸", "📺"], 
+                correctItem: "📺",
+                explanation: "📺 лишний — телевизор, а остальное музыка" 
+            },
+            { 
+                items: ["👶", "🧒", "🧑", "👴"], 
+                correctItem: "👴",
+                explanation: "👴 лишний — дедушка, тут все по возрасту... хотя дедушка тоже человек, блин" 
+            },
+            { 
+                items: ["⚽", "🏀", "🎾", "🏈"], 
+                correctItem: "🎾",
+                explanation: "🎾 лишний — теннисный мяч, с ним играют ракеткой, а остальные мячи бросают/пинают" 
+            },
+            { 
+                items: ["🦅", "🦉", "🐦", "🐧"], 
+                correctItem: "🐧",
+                explanation: "🐧 лишний — пингвин не летает, остальные птицы летают" 
+            },
+            { 
+                items: ["💻", "📱", "🖥️", "☎️"], 
+                correctItem: "☎️",
+                explanation: "☎️ лишний — старый домашний телефон, остальные современные гаджеты" 
+            },
+            { 
+                items: ["🏢", "🏬", "🏭", "🏠"], 
+                correctItem: "🏠",
+                explanation: "🏠 лишний — маленький дом, остальные большие здания" 
+            },
+            { 
+                items: ["🧥", "🧣", "🧤", "👕"], 
+                correctItem: "👕",
+                explanation: "👕 лишняя — футболка (носится под одеждой), остальное носят поверх" 
+            },
+            { 
+                items: ["🐝", "🦋", "🐞", "🐜"], 
+                correctItem: "🐝",
+                explanation: "🐝 лишняя — пчела даёт мёд, остальные просто жучки-паучки" 
+            },
+            { 
+                items: ["🌵", "🌴", "🌲", "🌳"], 
+                correctItem: "🌵",
+                explanation: "🌵 лишний — кактус пустынный, остальные деревья" 
+            },
+            { 
+                items: ["🥝", "🍓", "🍇", "🍊"], 
+                correctItem: "🍊",
+                explanation: "🍊 лишний — апельсин цитрус, остальные ягоды (киви тоже ягода, кстати)" 
+            },
+            { 
+                items: ["🐠", "🐟", "🐡", "🐬"], 
+                correctItem: "🐬",
+                explanation: "🐬 лишний — дельфин млекопитающее, остальные рыбы" 
+            },
+            { 
+                items: ["🧀", "🍞", "🥖", "🥨"], 
+                correctItem: "🧀",
+                explanation: "🧀 лишний — сыр, а остальное выпечка/хлеб" 
+            },
+            { 
+                items: ["⏰", "⌛", "⏱️", "📅"], 
+                correctItem: "📅",
+                explanation: "📅 лишний — календарь (дни/месяцы), остальное время" 
+            },
+            { 
+                items: ["🎂", "🍰", "🧁", "🍪"], 
+                correctItem: "🍪",
+                explanation: "🍪 лишнее — печенье сухое, остальные тортики/пирожные" 
+            },
+            { 
+                items: ["💍", "👑", "💰", "💎"], 
+                correctItem: "💰",
+                explanation: "💰 лишние — деньги, остальное украшения/драгоценности" 
+            }
+        ];
+
+        // ========== ПОСЛАНИЯ ==========
+        const birthdayMessage = `Поздравляю тебя с Днём Рождения 🥳
+
+Сегодня это твой день.
+Но вообще‑то ты заслуживаешь, чтобы каждый день был таким.
+
+Я никогда не умел делать красиво.
+Не умею делать открытки, не умею подбирать слова, не умею быть серьёзным, когда надо.
+Но я хочу радовать тебя.
+И сегодня я хочу, чтобы ты просто знала…
+
+Ты — самое лучшее, что случалось в моей жизни.
+И я безумно рад, что мы познакомились не через интернет, не через приложение, а просто попали в одну школу.
+Будто так и должно было быть.
+
+Ты у меня везде в закрепке.
+У меня на тебя включены все уведомления.
+Я отвечаю сразу — не потому что всегда в телефоне, а потому что ты важнее всего, что в этом телефоне может быть.
+
+Твои голосовые — это музыка, под которую я засыпаю и просыпаюсь.
+Твои кружочки — самое прекрасное, что можно получить в сообщении.
+Твои мысли, твои события, твоя боль, твой смех — я каждый раз чувствую, как мне повезло, что ты делишься этим со мной.
+
+Я не обещаю, что смогу решить все твои проблемы.
+Но я обещаю, что ты всегда сможешь ими поделиться.
+Мы будем сидеть, разговаривать или молчать вместе.
+Потому что твоё спокойствие и твоя улыбка — это действительно самое важное для меня.
+
+Мне плевать, увижу ли я тебя с грязными волосами, уставшую, без макияжа, с кругами под глазами, больную, напряжённую.
+Для меня ты всё равно самая красивая девушка на свете.
+Ты красива всегда. Особенно когда настоящая.
+
+Я не буду врать и говорить, что у меня бабочки в животе и я не сплю ночами. Это не про меня. И не про нас. Но я знаю точно: когда ты долго не отвечаешь на сообщения – я каждые 5 минут проверяю наш чат. Когда ты пишешь про Сашу — у меня внутри всё сжимается, и я хочу быть лучше, чем он. Когда я делал ту валентинку — я не спал ночами не потому что "меня накрыло", а потому что хотел, чтобы ты почувствовала: ты важна. Не для галочки. А по-настоящему.
+
+Когда ты говоришь о себе плохо — ты оскорбляешь мои вкусы.
+Потому что я выбрал тебя.
+И я не ошибаюсь.
+
+Среди всех людей ты всегда будешь той, кто:
+— поддержит
+— поймёт
+— посмеётся
+— поможет
+— будет рядом
+Даже если мы просто молчим.
+
+Я хочу провести с тобой следующую весну.
+И лето.
+И осень.
+И зиму.
+И вообще — всё, что осталось.
+
+Я бы подарил тебе весь мир.
+Но я умею лишь делать кривые открытки, нести чушь, быть глупым и шутить тупые шутки.
+
+Но знаешь что?
+Я умею ещё кое-что.
+Я умею быть рядом.
+Всегда.
+
+Спасибо, что ты есть.
+Ещё раз поздравляю с Днём рождения , моя самая лучшая.`;
+
+        // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
+        const app = document.getElementById('app');
+        const TARGET_NAME = 'Мархабо';
+        let collectedDigits = ['_', '_', '_', '_', '_', '_', '_'];
+        const FINAL_CODE = '1420827';
+        let readPickups = new Array(45).fill(false);
+        let currentPickup = null;
+        let heartsInterval = null;
+
+        // ========== ФУНКЦИЯ ПЕРЕМЕШИВАНИЯ ==========
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // ========== АНИМАЦИИ ==========
+        function createPremiumParticles() {
+            const container = document.getElementById('particlesContainer');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'floating-particle';
+                
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = (Math.random() * 8 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 20 + 15) + 's';
+                
+                const hue = 300 + Math.random() * 60;
+                particle.style.background = `hsla(${hue}, 100%, 70%, ${0.3 + Math.random() * 0.4})`;
+                particle.style.boxShadow = `0 0 ${Math.random() * 30 + 10}px currentColor`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        function createBinaryRain() {
+            const bg = document.getElementById('binaryBg');
+            if (!bg) return;
+            
+            bg.innerHTML = '';
+            
+            for (let i = 0; i < 50; i++) {
+                const column = document.createElement('div');
+                column.className = 'binary-column';
+                column.style.left = Math.random() * 100 + '%';
+                column.style.animationDuration = (Math.random() * 6 + 4) + 's';
+                column.style.animationDelay = Math.random() * 5 + 's';
+                
+                let binaryString = '';
+                const length = Math.floor(Math.random() * 20 + 15);
+                for (let j = 0; j < length; j++) {
+                    binaryString += Math.random() > 0.5 ? '1' : '0';
+                    binaryString += '<br>';
+                }
+                column.innerHTML = binaryString;
+                bg.appendChild(column);
+            }
+        }
+
+        function startFloatingHearts() {
+            const container = document.getElementById('heartsContainer');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (heartsInterval) {
+                clearInterval(heartsInterval);
+                heartsInterval = null;
+            }
+            
+            for (let i = 0; i < 7; i++) {
+                setTimeout(() => {
+                    if (document.getElementById('heartsContainer') && 
+                        document.getElementById('heartsContainer').style.display !== 'none') {
+                        createHeart();
+                    }
+                }, i * 200);
+            }
+            
+            heartsInterval = setInterval(() => {
+                if (document.getElementById('heartsContainer') && 
+                    document.getElementById('heartsContainer').style.display !== 'none') {
+                    createHeart();
+                }
+            }, 2000);
+        }
+
+        function createHeart() {
+            const container = document.getElementById('heartsContainer');
+            if (!container || container.style.display === 'none') return;
+            
+            const heart = document.createElement('div');
+            heart.className = 'heart-particle';
+            
+            const hearts = ['❤️', '💖', '💗', '💓', '💕', '💘', '💝', '💞', '🩷', '♥️'];
+            heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+            
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.fontSize = (Math.random() * 30 + 15) + 'px';
+            heart.style.animationDuration = (Math.random() * 15 + 15) + 's';
+            heart.style.opacity = 0.15 + Math.random() * 0.2;
+            
+            const hue = 320 + Math.random() * 40;
+            heart.style.color = `hsla(${hue}, 100%, 70%, 0.3)`;
+            heart.style.textShadow = `0 0 15px hsla(${hue}, 100%, 70%, 0.3)`;
+            
+            container.appendChild(heart);
+            
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    heart.remove();
+                }
+            }, 30000);
+        }
+
+        function stopFloatingHearts() {
+            const container = document.getElementById('heartsContainer');
+            if (container) {
+                container.innerHTML = '';
+            }
+            if (heartsInterval) {
+                clearInterval(heartsInterval);
+                heartsInterval = null;
+            }
+        }
+
+        function createPulseDots() {
+            const container = document.getElementById('pulseDots');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 80; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'pulse-dot';
+                dot.style.left = Math.random() * 100 + '%';
+                dot.style.top = Math.random() * 100 + '%';
+                dot.style.animationDelay = Math.random() * 4 + 's';
+                dot.style.animationDuration = (Math.random() * 5 + 3) + 's';
+                dot.style.width = (Math.random() * 8 + 2) + 'px';
+                dot.style.height = dot.style.width;
+                
+                const hue = 300 + Math.random() * 60;
+                dot.style.background = `hsla(${hue}, 100%, 70%, ${0.1 + Math.random() * 0.2})`;
+                dot.style.boxShadow = `0 0 ${Math.random() * 20 + 5}px hsla(${hue}, 100%, 70%, 0.3)`;
+                
+                container.appendChild(dot);
+            }
+        }
+
+        function createMovingLines() {
+            const container = document.getElementById('movingLines');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 40; i++) {
+                const line = document.createElement('div');
+                line.className = 'line-particle';
+                line.style.left = Math.random() * 100 + '%';
+                line.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                line.style.animationDelay = Math.random() * 10 + 's';
+                line.style.opacity = Math.random() * 0.15 + 0.05;
+                line.style.height = (Math.random() * 150 + 50) + 'px';
+                
+                const hue = 300 + Math.random() * 60;
+                line.style.background = `linear-gradient(to bottom, transparent, hsla(${hue}, 100%, 70%, 0.2), transparent)`;
+                
+                container.appendChild(line);
+            }
+        }
+
+        function showFirstPageLayers() {
+            document.getElementById('heartsContainer').style.display = 'none';
+            document.getElementById('pulseDots').style.display = 'none';
+            document.getElementById('movingLines').style.display = 'none';
+            stopFloatingHearts();
+        }
+
+        function showSecondPageLayers() {
+            document.getElementById('heartsContainer').style.display = 'block';
+            document.getElementById('pulseDots').style.display = 'block';
+            document.getElementById('movingLines').style.display = 'block';
+            startFloatingHearts();
+            createPulseDots();
+            createMovingLines();
+        }
+
+        // ========== ФУНКЦИЯ ПОКАЗА ПОСЛАНИЯ ==========
+        function showBirthdayMessage() {
+            app.innerHTML = `
+                <div class="soft-screen">
+                    <div class="message-card stagger-fade-in">
+                        <div class="message-title gradient-text">💌 ПОСЛАНИЕ</div>
+                        <div class="message-text">${birthdayMessage.replace(/\n/g, '<br>')}</div>
+                        <button class="message-button secondary" id="backToMenuBtn">← В МЕНЮ</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('backToMenuBtn').addEventListener('click', showGameMenu);
+        }
+
+        // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
+        function showLogin() {
+            showFirstPageLayers();
+            
+            document.body.style.background = '#000';
+            document.body.style.color = '#0f0';
+            
+            app.innerHTML = `
+                <div class="terminal glass-card" id="terminal">
+                    <div class="system gradient-text">SYSTEM v1.0 [SECURE TERMINAL]</div>
+                    <div class="system">> ACCESS LEVEL: CLASSIFIED</div>
+                    <hr>
+                    <div class="line typing-animation">TERMINAL RESTRICTED TO SINGLE USER</div>
+                    <div class="line">UNAUTHORIZED ACCESS PROHIBITED</div>
+                    <hr>
+                    <div class="input-line">
+                        <span class="prompt">></span>
+                        <input type="text" id="username" placeholder="USERNAME" autofocus class="glass-card" style="background: rgba(0,0,0,0.5); border: 1px solid #0f0;">
+                    </div>
+                    <button id="submit" class="premium-button">[ AUTHENTICATE ]</button>
+                </div>
+            `;
+
+            const input = document.getElementById('username');
+            const submit = document.getElementById('submit');
+
+            const checkAuth = () => {
+                if (input.value.trim().toLowerCase() === TARGET_NAME.toLowerCase()) {
+                    showLoadingSequence();
+                } else {
+                    showError();
+                }
+            };
+
+            submit.addEventListener('click', checkAuth);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') checkAuth();
+            });
+        }
+
+        function showError() {
+            app.innerHTML = `
+                <div class="terminal error glass-card" style="border-color: #f00;">
+                    <div class="system" style="color: #f00;">[ERROR] AUTHENTICATION FAILED</div>
+                    <hr>
+                    <div class="line" style="color: #f00;">> ACCESS DENIED</div>
+                    <div class="line" style="color: #f00;">> USER NOT FOUND</div>
+                    <hr>
+                    <div class="line" style="color: #f00;">INVALID CREDENTIALS</div>
+                    <button id="retry" class="premium-button" style="margin-top: 15px;">[ RETRY ]</button>
+                </div>
+            `;
+
+            document.getElementById('retry').addEventListener('click', showLogin);
+        }
+
+        function showLoadingSequence() {
+            let progress = 0;
+            
+            app.innerHTML = `
+                <div class="terminal glass-card" id="loadingTerminal">
+                    <div class="system gradient-text">> ACCESS GRANTED</div>
+                    <div class="system">> USER: МАРХАБО</div>
+                    <hr>
+                    <div class="line glitch-text">> ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ...</div>
+                    <div class="progress-container" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">0%</div>
+                    <div class="line" id="statusMessage">> ПОЛУЧЕНИЕ ДАННЫХ...</div>
+                </div>
+            `;
+
+            const fill = document.getElementById('progressFill');
+            const text = document.getElementById('progressText');
+            const status = document.getElementById('statusMessage');
+            const binaryBg = document.getElementById('binaryBg');
+            
+            const messages = [
+                "> IP-АДРЕС: 192.168.1.45",
+                "> MAC-АДРЕС: 2A:3F:8C:91:4D:7E",
+                "> ХОСТНЕЙМ: MARKHABO-DEVICE",
+                "> ГЕОЛОКАЦИЯ: САМАРА, РОССИЯ",
+                "> КООРДИНАТЫ: 53.195, 50.101",
+                "> ЧАСОВОЙ ПОЯС: UTC+4",
+                "> ПРОВАЙДЕР: РОСТЕЛЕКОМ",
+                "> УРОВЕНЬ ДОПУСКА: 5",
+                "> КЛЮЧ ШИФРОВАНИЯ: 7A3F8C91",
+                "> АЛГОРИТМ: ГОСТ 28147-89",
+                "> ПОСЛЕДНИЙ ВХОД: 18.02.2026",
+                "> ПОПЫТОК ВХОДА: 47",
+                "> ТИП УСТРОЙСТВА: IPHONE 13",
+                "> ОС: IOS 18",
+                "> БРАУЗЕР: SAFARI",
+                "> РАЗРЕШЕНИЕ: 2532x1170",
+                "> СКОРОСТЬ: 85 Мбит/с",
+                "> ЗАДЕРЖКА: 23 мс",
+                "> АНТИВИРУС: НЕ ТРЕБУЕТСЯ",
+                "> БРАНДМАУЭР: ВКЛЮЧЁН",
+                "> ПОРТЫ: 22, 80, 443",
+                "> ПРОЦЕССОР: A15 BIONIC",
+                "> ОЗУ: 4 ГБ",
+                "> ПАМЯТЬ: 128 ГБ",
+                "> БАТАРЕЯ: 87%",
+                "> ТЕМПЕРАТУРА: 36°C",
+                "> НАГРУЗКА CPU: 23%"
+            ];
+            
+            let messageIndex = 0;
+            
+            function getDelay() {
+                if (progress < 30) return 30;
+                if (progress < 60) return 60;
+                if (progress < 80) return 100;
+                if (progress < 95) return 200;
+                return 300;
+            }
+            
+            function updateProgress() {
+                progress += 1;
+                fill.style.width = progress + '%';
+                text.textContent = progress + '%';
+                
+                if (progress % 4 === 0 && messageIndex < messages.length) {
+                    status.innerHTML = messages[messageIndex];
+                    messageIndex++;
+                }
+                
+                if (progress < 100) {
+                    setTimeout(updateProgress, getDelay());
+                } else {
+                    status.innerHTML = '> ДОСТУП РАЗРЕШЁН';
+                    
+                    document.body.style.color = '#ff69b4';
+                    document.body.style.background = '#1a0a0a';
+                    
+                    binaryBg.style.color = '#ff69b4';
+                    binaryBg.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        showGameMenu();
+                    }, 1500);
+                }
+            }
+            
+            setTimeout(updateProgress, getDelay());
+        }
+
+        // ========== ОБНОВЛЁННОЕ ГЛАВНОЕ МЕНЮ ==========
+        function showGameMenu() {
+            showSecondPageLayers();
+            
+            // ЗАПУСКАЕМ МУЗЫКУ ПРИ ПОЯВЛЕНИИ ГЛАВНОГО МЕНЮ
+            startMusic();
+            
+            app.innerHTML = `
+                <div class="soft-screen">
+                    <div class="soft-card glass-card stagger-fade-in">
+                        <div class="soft-title" style="color: #ff69b4; text-shadow: 0 0 15px rgba(255, 105, 180, 0.5); font-size: 32px; margin-bottom: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center;">
+                            🎮 ДОБРО ПОЖАЛОВАТЬ, ГОСПОЖА 👑
+                        </div>
+                        
+                        <div class="soft-text" style="text-align: left; margin-bottom: 30px;">
+                            <p style="margin-bottom: 15px;">Правила просты: вы должны проходить мини игры и получать 1 из цифры за каждую пройденную мини игру, в конце вам откроется секретное послание. Правила игр в конце.</p>
+                        </div>
+                        
+                        <div class="digit-display glass-card" id="digitDisplay" style="border: 1px solid rgba(255,105,180,0.3);">
+                            🖤 ${collectedDigits.join(' ')} 🖤
+                        </div>
+                        
+                        <div class="game-menu">
+                            <div class="game-button" id="game1">
+                                <span>1. Если бы ты была…</span>
+                                <span class="game-badge pulse">${collectedDigits[0] !== '_' ? '1' : '🔓'}</span>
+                            </div>
+                            <div class="game-button" id="game2">
+                                <span>2. Правда или ложь</span>
+                                <span class="game-badge pulse">${collectedDigits[1] !== '_' ? '4' : '🔓'}</span>
+                            </div>
+                            <div class="game-button" id="game3">
+                                <span>3. 45 подкатов</span>
+                                <span class="game-badge pulse">${collectedDigits[2] !== '_' ? '2' : '🔓'}</span>
+                            </div>
+                            <div class="game-button" id="game4">
+                                <span>4. ТЕСТ</span>
+                                <span class="game-badge pulse">${collectedDigits[3] !== '_' ? '0' : '🔓'}</span>
+                            </div>
+                            <div class="game-button" id="game5">
+                                <span>5. На реакцию</span>
+                                <span class="game-badge pulse">${collectedDigits[4] !== '_' ? '8' : '🔓'}</span>
+                            </div>
+                            <div class="game-button" id="game6">
+                                <span>6. Найди лишнее</span>
+                                <span class="game-badge pulse">${collectedDigits[5] !== '_' ? '2' : '🔓'}</span>
+                            </div>
+                            <div class="game-button" id="game7">
+                                <span>7. Шифр</span>
+                                <span class="game-badge pulse">${collectedDigits[6] !== '_' ? '7' : '🔓'}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rules-section">
+                            <div class="rules-title gradient-text">📜 ПРАВИЛА ИГР</div>
+                            
+                            <div class="rule-item">
+                                <div class="rule-game">🎮 Правила игры #1:</div>
+                                <div class="rule-text">Это даже не мини игра, а просто лист с тем чем вы бы были, задача просто пролистать до конца. Проиграть невозможно.</div>
+                            </div>
+                            
+                            <div class="rule-item">
+                                <div class="rule-game">🎮 Правила игры #2:</div>
+                                <div class="rule-text">Это реальные или выдуманные факты, это лёгкая проверка того насколько хорошо вы меня знаете. Всё вопросы простые. Шансов на ошибку: 3</div>
+                            </div>
+                            
+                            <div class="rule-item">
+                                <div class="rule-game">🎮 Правила игры #3:</div>
+                                <div class="rule-text">Простите но нечего умнее я не придумал, поэтому это тупо 45 подкатов либо комплементов. Проиграть не возможно. И ещё кое что… ВЫ ДОЛЖНЫ ПРОЧИТАТЬ ВСЁ.</div>
+                            </div>
+                            
+                            <div class="rule-item">
+                                <div class="rule-game">🎮 Правила игры #4:</div>
+                                <div class="rule-text">Это тоже самое что и вторая игра, даётся 4 варианта ответа и среди них только 1 правильный. Опять таки проверка того насколько хорошо вы меня знаете но уже по труднее. Шансов на ошибку: 3</div>
+                            </div>
+                            
+                            <div class="rule-item">
+                                <div class="rule-game">🎮 Правила игры #5:</div>
+                                <div class="rule-text">Простая мини игра на реакцию, Ваша задача заключается в том что бы ловить сердечки ещё до того как они исчезнут, если поймаете что то кроме сердечек то это засчитается как за ошибку. Всего есть 3 раунда, каждый последующий раунд быстрее предыдущего. Шансов на ошибку: 3</div>
+                            </div>
+                            
+                            <div class="rule-item">
+                                <div class="rule-game">🎮 Правила игры #6:</div>
+                                <div class="rule-text">Самая обычная игра задача в которой найти лишнее среди четырёх фото. Шансов на ошибку: 3</div>
+                            </div>
+                            
+                            <div class="rule-item">
+                                <div class="rule-game">🎮 Правила игры #7:</div>
+                                <div class="rule-text">Найти шифр и больше не каких правил</div>
+                            </div>
+                        </div>
+                        
+                        <button class="final-button premium-button" id="finalBtn" ${collectedDigits.includes('_') ? 'disabled' : ''}>
+                            🔓 ОТКРЫТЬ ПОСЛАНИЕ
+                        </button>
+                        
+                        <div style="margin-top: 20px;" class="heart-icon pulse">🖤</div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('game1').addEventListener('click', () => {
+                stopFloatingHearts();
+                showGame1();
+            });
+            document.getElementById('game2').addEventListener('click', () => {
+                stopFloatingHearts();
+                showGame2();
+            });
+            document.getElementById('game3').addEventListener('click', () => {
+                stopFloatingHearts();
+                showGame3();
+            });
+            document.getElementById('game4').addEventListener('click', () => {
+                stopFloatingHearts();
+                showGame4();
+            });
+            document.getElementById('game5').addEventListener('click', () => {
+                stopFloatingHearts();
+                showGame5();
+            });
+            document.getElementById('game6').addEventListener('click', () => {
+                stopFloatingHearts();
+                showGame6();
+            });
+            document.getElementById('game7').addEventListener('click', () => {
+                stopFloatingHearts();
+                showGame7();
+            });
+            
+            const finalBtn = document.getElementById('finalBtn');
+            if (finalBtn && !collectedDigits.includes('_')) {
+                finalBtn.addEventListener('click', () => {
+                    const enteredCode = collectedDigits.join('');
+                    if (enteredCode === FINAL_CODE) {
+                        showBirthdayMessage();
+                    } else {
+                        alert('❌ Неверный код');
+                    }
+                });
+            }
+        }
+
+        // ========== ИГРА 1 ==========
+        function showGame1() {
+            let currentIndex = 0;
+            let game1Completed = collectedDigits[0] !== '_';
+            
+            function renderGame1() {
+                const card = game1Cards[currentIndex];
+                
+                app.innerHTML = `
+                    <div class="soft-screen">
+                        <div class="game-container glass-card stagger-fade-in">
+                            <div class="game-header glass-card" style="margin-bottom: 20px;">
+                                <div class="game-title gradient-text">🎮 Если бы ты была…</div>
+                                <div class="digit-box pulse">${game1Completed ? '1' : '_'}</div>
+                            </div>
+
+                            <div class="card glass-card-deep">
+                                <div class="card-category">${card.category}</div>
+                                <div class="card-emoji">${card.emoji}</div>
+                                <div class="card-text">${card.text}</div>
+                                <div class="card-desc">${card.desc}</div>
+                            </div>
+
+                            <div class="counter">${currentIndex + 1} / ${game1Cards.length}</div>
+
+                            <div class="nav-buttons">
+                                <button class="nav-btn premium-button" style="width: 60px; height: 60px; padding: 0;" id="prevBtn" ${currentIndex === 0 ? 'disabled' : ''}>←</button>
+                                <button class="nav-btn premium-button" style="width: 60px; height: 60px; padding: 0;" id="nextBtn" ${currentIndex === game1Cards.length - 1 ? 'disabled' : ''}>→</button>
+                            </div>
+
+                            ${currentIndex === game1Cards.length - 1 && !game1Completed ? 
+                                `<button class="get-digit-btn premium-button" id="getDigitBtn">🎁 ЦИФРА 1</button>` : 
+                                ''
+                            }
+
+                            ${game1Completed ? 
+                                `<div class="footer">
+                                    <button class="back-btn premium-button" id="backToMenuBtn">← В МЕНЮ</button>
+                                </div>` : 
+                                ''
+                            }
+                        </div>
+                    </div>
+                `;
+
+                if (document.getElementById('prevBtn')) {
+                    document.getElementById('prevBtn').addEventListener('click', () => {
+                        if (currentIndex > 0) {
+                            currentIndex--;
+                            renderGame1();
+                        }
+                    });
+                }
+
+                if (document.getElementById('nextBtn')) {
+                    document.getElementById('nextBtn').addEventListener('click', () => {
+                        if (currentIndex < game1Cards.length - 1) {
+                            currentIndex++;
+                            renderGame1();
+                        }
+                    });
+                }
+
+                if (document.getElementById('getDigitBtn')) {
+                    document.getElementById('getDigitBtn').addEventListener('click', () => {
+                        collectedDigits[0] = '1';
+                        game1Completed = true;
+                        renderGame1();
+                    });
+                }
+
+                if (document.getElementById('backToMenuBtn')) {
+                    document.getElementById('backToMenuBtn').addEventListener('click', showGameMenu);
+                }
+            }
+
+            renderGame1();
+        }
+
+        // ========== ИГРА 2 ==========
+        function showGame2() {
+            let currentIndex = 0;
+            let game2Completed = collectedDigits[1] !== '_';
+            let mistakes = 0;
+            const MAX_MISTAKES = 3;
+            let gameOver = false;
+            
+            function renderGame2() {
+                if (gameOver) {
+                    app.innerHTML = `
+                        <div class="soft-screen">
+                            <div class="game-container glass-card">
+                                <div class="game-header glass-card">
+                                    <div class="game-title gradient-text">🎮 Правда или ложь</div>
+                                    <div class="digit-box pulse">${collectedDigits[1] !== '_' ? '4' : '_'}</div>
+                                </div>
+                                
+                                <div class="game-over">
+                                    <h2 class="glitch-text" style="color: #f44336;">💔 ТЫ ПРОИГРАЛА</h2>
+                                    <p>Ты использовала все ${MAX_MISTAKES} шанса</p>
+                                    <button class="back-btn premium-button" id="restartBtn">🔄 НАЧАТЬ ЗАНОВО</button>
+                                    <button class="back-btn premium-button" id="menuBtn">← В МЕНЮ</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('restartBtn').addEventListener('click', () => {
+                        currentIndex = 0;
+                        mistakes = 0;
+                        gameOver = false;
+                        renderGame2();
+                    });
+
+                    document.getElementById('menuBtn').addEventListener('click', showGameMenu);
+                    return;
+                }
+
+                if (game2Completed) {
+                    app.innerHTML = `
+                        <div class="soft-screen">
+                            <div class="game-container glass-card">
+                                <div class="game-header glass-card">
+                                    <div class="game-title gradient-text">🎮 Правда или ложь</div>
+                                    <div class="digit-box pulse">4</div>
+                                </div>
+                                
+                                <div class="fact-card glass-card-deep">
+                                    <div class="fact-text" style="font-size: 24px;" class="gradient-text">🎉 МОЛОДЕЦ!</div>
+                                    <div class="fact-text">Ты прошла игру</div>
+                                    <div class="fact-text">Ошибок: ${mistakes}/${MAX_MISTAKES}</div>
+                                </div>
+                                
+                                <button class="get-digit-btn premium-button" id="getDigitBtn">🎁 ЦИФРА 4</button>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('getDigitBtn').addEventListener('click', () => {
+                        collectedDigits[1] = '4';
+                        showGameMenu();
+                    });
+                    return;
+                }
+
+                const fact = game2Facts[currentIndex];
+                
+                const mistakesLeft = MAX_MISTAKES - mistakes;
+                const chanceIndicator = '❤️'.repeat(mistakesLeft) + '❌'.repeat(mistakes);
+                
+                app.innerHTML = `
+                    <div class="soft-screen">
+                        <div class="game-container glass-card">
+                            <div class="game-header glass-card">
+                                <div class="game-title gradient-text">🎮 Правда или ложь</div>
+                                <div class="digit-box pulse">${collectedDigits[1] !== '_' ? '4' : '_'}</div>
+                            </div>
+
+                            <div class="chance-indicator">
+                                Осталось шансов: ${chanceIndicator} (${mistakesLeft}/${MAX_MISTAKES})
+                            </div>
+
+                            <div class="fact-card glass-card-deep">
+                                <div class="fact-number">${currentIndex + 1} / ${game2Facts.length}</div>
+                                <div class="fact-text">${fact.text}</div>
+                            </div>
+
+                            <div class="buttons">
+                                <button class="truth-btn premium-button" style="border-color: #4caf50; color: #4caf50;" id="truthBtn">✅ ПРАВДА</button>
+                                <button class="lie-btn premium-button" style="border-color: #f44336; color: #f44336;" id="lieBtn">❌ ЛОЖЬ</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('truthBtn').addEventListener('click', () => {
+                    if (fact.correct === false) {
+                        mistakes++;
+                        if (mistakes >= MAX_MISTAKES) {
+                            gameOver = true;
+                            renderGame2();
+                        } else {
+                            showComment(fact);
+                        }
+                        return;
+                    }
+                    showComment(fact);
+                });
+
+                document.getElementById('lieBtn').addEventListener('click', () => {
+                    if (fact.correct === true) {
+                        mistakes++;
+                        if (mistakes >= MAX_MISTAKES) {
+                            gameOver = true;
+                            renderGame2();
+                        } else {
+                            showComment(fact);
+                        }
+                        return;
+                    }
+                    showComment(fact);
+                });
+            }
+
+            function showComment(fact) {
+                app.innerHTML = `
+                    <div class="soft-screen">
+                        <div class="game-container glass-card">
+                            <div class="game-header glass-card">
+                                <div class="game-title gradient-text">🎮 Правда или ложь</div>
+                                <div class="digit-box pulse">${collectedDigits[1] !== '_' ? '4' : '_'}</div>
+                            </div>
+
+                            <div class="comment-box glass-card-deep">
+                                💬 ${fact.comment}
+                            </div>
+                            
+                            ${currentIndex < game2Facts.length - 1 ? 
+                                `<button class="next-btn premium-button" id="nextBtn">ДАЛЬШЕ →</button>` : 
+                                `<button class="get-digit-btn premium-button" id="finishBtn">✅ ЗАВЕРШИТЬ</button>`
+                            }
+                        </div>
+                    </div>
+                `;
+
+                if (document.getElementById('nextBtn')) {
+                    document.getElementById('nextBtn').addEventListener('click', () => {
+                        currentIndex++;
+                        renderGame2();
+                    });
+                }
+
+                if (document.getElementById('finishBtn')) {
+                    document.getElementById('finishBtn').addEventListener('click', () => {
+                        game2Completed = true;
+                        renderGame2();
+                    });
+                }
+            }
+
+            renderGame2();
+        }
+
+        // ========== ИГРА 3 ==========
+        function showGame3() {
+            renderPickupList();
+        }
+
+        function renderPickupList() {
+            const readCount = readPickups.filter(v => v).length;
+            const allRead = readCount === 45;
+
+            let buttons = '';
+            game3Pickups.forEach(pickup => {
+                const isRead = readPickups[pickup.number - 1];
+                buttons += `<button class="pickup-btn ${isRead ? 'read' : ''}" data-number="${pickup.number}">#${pickup.number}</button>`;
+            });
+
+            app.innerHTML = `
+                <div class="soft-screen">
+                    <div class="game-container glass-card stagger-fade-in">
+                        <div class="game-header glass-card">
+                            <div class="game-title gradient-text">🎮 45 ПОДКАТОВ</div>
+                            <div class="progress-box pulse">${readCount}/45</div>
+                        </div>
+
+                        <div class="pickup-grid glass-card-deep">
+                            ${buttons}
+                        </div>
+
+                        ${allRead && collectedDigits[2] === '_' ? 
+                            `<button class="get-digit-btn premium-button" id="getDigitBtn3">🎁 ПОЛУЧИТЬ ЦИФРУ 2</button>` : 
+                            (collectedDigits[2] !== '_' ?
+                                `<button class="back-btn premium-button" id="backBtn">← В МЕНЮ</button>` :
+                                `<div class="counter-text">Прочитано ${readCount} из 45</div>`
+                            )
+                        }
+                    </div>
+                </div>
+            `;
+
+            document.querySelectorAll('.pickup-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const num = parseInt(e.target.dataset.number);
+                    currentPickup = game3Pickups.find(p => p.number === num);
+                    renderPickupQuestion();
+                });
+            });
+
+            if (document.getElementById('getDigitBtn3')) {
+                document.getElementById('getDigitBtn3').addEventListener('click', () => {
+                    collectedDigits[2] = '2';
+                    showGameMenu();
+                });
+            }
+
+            if (document.getElementById('backBtn')) {
+                document.getElementById('backBtn').addEventListener('click', showGameMenu);
+            }
+        }
+
+        function renderPickupQuestion() {
+            if (!currentPickup) return;
+
+            app.innerHTML = `
+                <div class="soft-screen">
+                    <div class="game-container glass-card">
+                        <div class="game-header glass-card">
+                            <div class="game-title gradient-text">🎮 #${currentPickup.number}</div>
+                            <div class="progress-box pulse">${readPickups.filter(v => v).length}/45</div>
+                        </div>
+
+                        <div class="pickup-question glass-card-deep">
+                            <p>${currentPickup.question}</p>
+                            
+                            ${currentPickup.type === 'yesno' ? 
+                                `<div class="buttons-row">
+                                    <button class="action-btn small premium-button" id="yesBtn">${currentPickup.yesButton || 'Да'}</button>
+                                    <button class="action-btn small premium-button" id="noBtn">${currentPickup.noButton || 'Нет'}</button>
+                                </div>` : 
+                                (currentPickup.questionButton ? 
+                                    `<button class="action-btn premium-button" id="questionBtn">${currentPickup.questionButton}</button>` : 
+                                    `<button class="action-btn premium-button" id="answerBtn">${currentPickup.answerButton}</button>`
+                                )
+                            }
+                        </div>
+
+                        <button class="back-btn premium-button" id="backBtn">← К СПИСКУ</button>
+                    </div>
+                </div>
+            `;
+
+            if (currentPickup.type === 'yesno') {
+                document.getElementById('yesBtn').addEventListener('click', () => {
+                    readPickups[currentPickup.number - 1] = true;
+                    renderPickupAnswer();
+                });
+
+                document.getElementById('noBtn').addEventListener('click', () => {
+                    renderPickupNo();
+                });
+            } else if (currentPickup.questionButton) {
+                document.getElementById('questionBtn').addEventListener('click', () => {
+                    readPickups[currentPickup.number - 1] = true;
+                    renderPickupAnswer();
+                });
+            } else if (currentPickup.answerButton) {
+                document.getElementById('answerBtn').addEventListener('click', () => {
+                    readPickups[currentPickup.number - 1] = true;
+                    renderPickupList();
+                });
+            }
+
+            document.getElementById('backBtn').addEventListener('click', () => {
+                currentPickup = null;
+                renderPickupList();
+            });
+        }
+
+        function renderPickupAnswer() {
+            if (!currentPickup) return;
+
+            app.innerHTML = `
+                <div class="soft-screen">
+                    <div class="game-container glass-card">
+                        <div class="game-header glass-card">
+                            <div class="game-title gradient-text">🎮 #${currentPickup.number}</div>
+                            <div class="progress-box pulse">${readPickups.filter(v => v).length}/45</div>
+                        </div>
+
+                        <div class="pickup-question glass-card-deep">
+                            <p style="font-size: 24px;" class="gradient-text">${currentPickup.answer}</p>
+                            <button class="action-btn premium-button" id="answerBtn">${currentPickup.answerButton}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('answerBtn').addEventListener('click', () => {
+                renderPickupList();
+            });
+        }
+
+        function renderPickupNo() {
+            if (!currentPickup) return;
+
+            app.innerHTML = `
+                <div class="soft-screen">
+                    <div class="game-container glass-card">
+                        <div class="game-header glass-card">
+                            <div class="game-title gradient-text">🎮 #${currentPickup.number}</div>
+                            <div class="progress-box pulse">${readPickups.filter(v => v).length}/45</div>
+                        </div>
+
+                        <div class="pickup-question glass-card-deep">
+                            <p style="font-size: 20px;">Ахуела? Давай заново</p>
+                            <button class="action-btn premium-button" id="backToQuestion">← НАЗАД</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('backToQuestion').addEventListener('click', () => {
+                renderPickupQuestion();
+            });
+        }
+
+        // ========== ИГРА 4 ==========
+        function showGame4() {
+            let currentIndex = 0;
+            let errors = 0;
+            const MAX_ERRORS = 3;
+            let gameCompleted = false;
+            let gameFailed = false;
+            let questionAnswered = false;
+            let selectedOption = null;
+            
+            function renderGame4() {
+                if (gameFailed) {
+                    app.innerHTML = `
+                        <div class="soft-screen">
+                            <div class="game-container glass-card">
+                                <div class="game-header glass-card">
+                                    <div class="game-title gradient-text">🎮 ТЕСТ</div>
+                                    <div class="digit-box pulse">${collectedDigits[3] !== '_' ? '0' : '_'}</div>
+                                </div>
+                                
+                                <div class="game-over">
+                                    <h2 class="glitch-text" style="color: #f44336;">💔 ПРОИГРЫШ</h2>
+                                    <p>${MAX_ERRORS} ошибки. Попробуй ещё раз.</p>
+                                    <button class="back-btn premium-button" id="restartBtn">🔄 ЗАНОВО</button>
+                                    <button class="back-btn premium-button" id="menuBtn">← В МЕНЮ</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('restartBtn').addEventListener('click', () => {
+                        currentIndex = 0;
+                        errors = 0;
+                        gameFailed = false;
+                        gameCompleted = false;
+                        questionAnswered = false;
+                        selectedOption = null;
+                        renderGame4();
+                    });
+                    
+                    document.getElementById('menuBtn').addEventListener('click', showGameMenu);
+                    return;
+                }
+                
+                if (gameCompleted) {
+                    app.innerHTML = `
+                        <div class="soft-screen">
+                            <div class="game-container glass-card">
+                                <div class="game-header glass-card">
+                                    <div class="game-title gradient-text">🎮 ТЕСТ</div>
+                                    <div class="digit-box pulse">0</div>
+                                </div>
+                                
+                                <div class="fact-card glass-card-deep">
+                                    <div class="fact-text" style="font-size: 24px;" class="gradient-text">🎉 ПОБЕДА!</div>
+                                    <div class="fact-text">Ошибок: ${errors}/${MAX_ERRORS}</div>
+                                </div>
+                                
+                                <button class="get-digit-btn premium-button" id="getDigitBtn4">🎁 ЦИФРА 0</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('getDigitBtn4').addEventListener('click', () => {
+                        collectedDigits[3] = '0';
+                        showGameMenu();
+                    });
+                    return;
+                }
+                
+                const question = game4Questions[currentIndex];
+                
+                let optionsHtml = '';
+                question.options.forEach((opt, idx) => {
+                    let optionClass = 'option-btn premium-button';
+                    if (questionAnswered) {
+                        if (question.anyAnswer) {
+                            if (selectedOption === idx) {
+                                optionClass += ' selected-any';
+                            }
+                        } else {
+                            if (idx === question.correct) {
+                                optionClass += ' selected-correct';
+                            } else if (selectedOption === idx && idx !== question.correct) {
+                                optionClass += ' selected-wrong';
+                            }
+                        }
+                    }
+                    optionsHtml += `<button class="${optionClass}" style="${questionAnswered ? 'opacity: 0.8;' : ''}" data-option="${idx}" ${questionAnswered ? 'disabled' : ''}>${opt}</button>`;
+                });
+                
+                app.innerHTML = `
+                    <div class="soft-screen">
+                        <div class="game-container glass-card">
+                            <div class="game-header glass-card">
+                                <div class="game-title gradient-text">🎮 ТЕСТ</div>
+                                <div class="digit-box pulse">${collectedDigits[3] !== '_' ? '0' : '_'}</div>
+                            </div>
+                            
+                            <div class="error-counter">
+                                ❌ <span class="error-badge">${errors}/${MAX_ERRORS}</span>
+                            </div>
+
+                            <div class="fact-card glass-card-deep">
+                                <div class="fact-number">${currentIndex + 1} / ${game4Questions.length}</div>
+                                <div class="fact-text">${question.question}</div>
+                            </div>
+
+                            <div class="options" id="optionsContainer">
+                                ${optionsHtml}
+                            </div>
+
+                            ${questionAnswered && currentIndex < game4Questions.length - 1 ? 
+                                `<button class="next-btn premium-button" id="nextQuestionBtn">→</button>` : 
+                                (questionAnswered && currentIndex === game4Questions.length - 1 && !gameCompleted && !gameFailed ?
+                                    `<button class="get-digit-btn premium-button" id="finishTestBtn">✅ ЗАВЕРШИТЬ</button>` : ''
+                                )
+                            }
+                        </div>
+                    </div>
+                `;
+
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        if (questionAnswered) return;
+                        
+                        const optionIdx = parseInt(e.target.dataset.option);
+                        selectedOption = optionIdx;
+                        questionAnswered = true;
+                        
+                        if (!question.anyAnswer && optionIdx !== question.correct) {
+                            errors++;
+                        }
+                        
+                        if (errors >= MAX_ERRORS) {
+                            gameFailed = true;
+                        }
+                        
+                        renderGame4();
+                    });
+                });
+
+                if (document.getElementById('nextQuestionBtn')) {
+                    document.getElementById('nextQuestionBtn').addEventListener('click', () => {
+                        currentIndex++;
+                        questionAnswered = false;
+                        selectedOption = null;
+                        renderGame4();
+                    });
+                }
+
+                if (document.getElementById('finishTestBtn')) {
+                    document.getElementById('finishTestBtn').addEventListener('click', () => {
+                        if (errors < MAX_ERRORS) {
+                            gameCompleted = true;
+                            renderGame4();
+                        }
+                    });
+                }
+            }
+
+            renderGame4();
+        }
+
+        // ========== ИГРА 5 ==========
+        function showGame5() {
+            const hearts = ['❤️', '💖', '💗', '💓', '💕', '💘', '💝', '💞'];
+            const evilStuff = ['💩', '👻', '💀', '👹', '🤡', '👿', '👽', '💔'];
+
+            class ReactionGame {
+                constructor() {
+                    this.round = 1;
+                    this.totalRounds = 3;
+                    this.hits = 0;
+                    this.errors = 0;
+                    this.targetsPerRound = 15;
+                    this.activeTargets = [];
+                    this.gameActive = false;
+                    this.roundActive = false;
+                    this.baseInterval = 1000;
+                    this.targetLifetime = 1500;
+                    this.gameLoop = null;
+                    this.timeouts = [];
+                }
+
+                getSpeedMultiplier() {
+                    return 1 - (this.round - 1) * 0.15;
+                }
+
+                getInterval() {
+                    return this.baseInterval * this.getSpeedMultiplier();
+                }
+
+                clearAllTimeouts() {
+                    this.timeouts.forEach(t => clearTimeout(t));
+                    this.timeouts = [];
+                }
+
+                startGame() {
+                    if (this.gameLoop) clearInterval(this.gameLoop);
+                    this.clearAllTimeouts();
+                    
+                    this.round = 1;
+                    this.hits = 0;
+                    this.errors = 0;
+                    this.gameActive = true;
+                    this.render();
+                    this.nextRound();
+                }
+
+                nextRound() {
+                    if (this.round > this.totalRounds) {
+                        this.gameActive = false;
+                        this.renderVictory();
+                        return;
+                    }
+
+                    this.roundActive = true;
+                    this.targetsThisRound = 0;
+                    this.activeTargets.forEach(t => t.remove());
+                    this.activeTargets = [];
+                    
+                    this.render();
+                    this.startRound();
+                }
+
+                startRound() {
+                    const interval = this.getInterval();
+                    
+                    this.gameLoop = setInterval(() => {
+                        if (!this.roundActive || !this.gameActive) return;
+                        
+                        if (this.targetsThisRound >= this.targetsPerRound) {
+                            clearInterval(this.gameLoop);
+                            this.roundActive = false;
+                            this.round++;
+                            this.nextRound();
+                            return;
+                        }
+
+                        this.spawnTarget();
+                        this.targetsThisRound++;
+                    }, interval);
+                }
+
+                spawnTarget() {
+                    const playArea = document.querySelector('.play-area');
+                    if (!playArea || !this.roundActive) return;
+
+                    const isHeart = Math.random() > 0.5;
+                    const emoji = isHeart ? 
+                        hearts[Math.floor(Math.random() * hearts.length)] : 
+                        evilStuff[Math.floor(Math.random() * evilStuff.length)];
+
+                    const target = document.createElement('div');
+                    target.className = `target ${isHeart ? 'heart' : 'evil'}`;
+                    target.textContent = emoji;
+                    target.dataset.type = isHeart ? 'heart' : 'evil';
+
+                    const left = Math.random() * (playArea.clientWidth - 50);
+                    const top = Math.random() * (playArea.clientHeight - 50);
+                    target.style.left = left + 'px';
+                    target.style.top = top + 'px';
+
+                    target.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (!this.roundActive || !this.gameActive) return;
+                        
+                        if (isHeart) {
+                            this.hits++;
+                            target.style.transform = 'scale(1.5)';
+                            setTimeout(() => target.remove(), 100);
+                        } else {
+                            this.errors++;
+                            target.style.transform = 'scale(0.5)';
+                            target.style.opacity = '0';
+                            setTimeout(() => target.remove(), 100);
+                        }
+                        
+                        this.activeTargets = this.activeTargets.filter(t => t !== target);
+                        
+                        if (this.errors >= 3) {
+                            this.gameOver();
+                            return;
+                        }
+                        
+                        this.updateStats();
+                    });
+
+                    playArea.appendChild(target);
+                    this.activeTargets.push(target);
+
+                    const timeout = setTimeout(() => {
+                        if (target.parentNode && this.roundActive && this.gameActive) {
+                            target.remove();
+                            this.activeTargets = this.activeTargets.filter(t => t !== target);
+                            
+                            if (isHeart) {
+                                this.errors++;
+                                if (this.errors >= 3) {
+                                    this.gameOver();
+                                    return;
+                                }
+                                this.updateStats();
+                            }
+                        }
+                    }, this.targetLifetime);
+                    
+                    this.timeouts.push(timeout);
+                }
+
+                gameOver() {
+                    this.gameActive = false;
+                    this.roundActive = false;
+                    clearInterval(this.gameLoop);
+                    this.clearAllTimeouts();
+                    
+                    this.activeTargets.forEach(t => t.remove());
+                    this.activeTargets = [];
+                    
+                    this.renderGameOver();
+                }
+
+                updateStats() {
+                    const hitsEl = document.getElementById('hitsCount');
+                    const errorsEl = document.getElementById('errorsCount');
+                    
+                    if (hitsEl) hitsEl.textContent = this.hits;
+                    if (errorsEl) errorsEl.textContent = this.errors;
+                }
+
+                render() {
+                    app.innerHTML = `
+                        <div class="soft-screen">
+                            <div class="game-container glass-card">
+                                <div class="game-header glass-card">
+                                    <div class="game-title gradient-text">⚡ ЛОВИ СЕРДЕЧКИ</div>
+                                    <div class="stats">
+                                        <div class="stat-box">❤️ <span id="hitsCount">${this.hits}</span></div>
+                                        <div class="stat-box">❌ <span id="errorsCount">${this.errors}</span>/3</div>
+                                    </div>
+                                </div>
+
+                                <div class="info-panel">
+                                    <div>Раунд ${this.round}/${this.totalRounds}</div>
+                                    <div class="speed-indicator">⚡ x${(1/this.getSpeedMultiplier()).toFixed(1)}</div>
+                                </div>
+
+                                <div class="play-area glass-card-deep" style="height: 350px;"></div>
+
+                                <div class="controls">
+                                    <button class="premium-button" id="restartBtn">🔄 ЗАНОВО</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('restartBtn').addEventListener('click', () => {
+                        this.startGame();
+                    });
+                }
+
+                renderGameOver() {
+                    app.innerHTML = `
+                        <div class="soft-screen">
+                            <div class="game-container glass-card">
+                                <div class="game-over">
+                                    <h2 class="glitch-text" style="color: #f44336;">💔 ПРОИГРЫШ</h2>
+                                    <p>3 ошибки</p>
+                                    <button class="back-btn premium-button" id="restartBtn">🔄 ЗАНОВО</button>
+                                    <button class="back-btn premium-button" id="menuBtn">← В МЕНЮ</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('restartBtn').addEventListener('click', () => {
+                        this.startGame();
+                    });
+                    
+                    document.getElementById('menuBtn').addEventListener('click', showGameMenu);
+                }
+
+                renderVictory() {
+                    app.innerHTML = `
+                        <div class="soft-screen">
+                            <div class="game-container glass-card">
+                                <div class="victory">
+                                    <h2 class="gradient-text">🎉 ПОБЕДА!</h2>
+                                    <p>Сердечек: ${this.hits}</p>
+                                    <p>Ошибок: ${this.errors}</p>
+                                    <button class="get-digit-btn premium-button" id="getDigitBtn5">🎁 ЦИФРА 8</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('getDigitBtn5').addEventListener('click', () => {
+                        collectedDigits[4] = '8';
+                        showGameMenu();
+                    });
+                }
+            }
+
+            const game = new ReactionGame();
+            game.startGame();
+        }
+
+        // ========== ОБНОВЛЁННАЯ ИГРА 6 ==========
+        function showGame6() {
+            let currentRound = 0;
+            let score = 0;
+            let mistakes = 0;
+            const MAX_MISTAKES = 3;
+            let gameCompleted = collectedDigits[5] !== '_';
+            let gameFailed = false;
+            let roundAnswered = false;
+            let selectedItem = null;
+            
+            let shuffledRounds = game6Rounds.map(round => ({
+                ...round,
+                shuffledItems: shuffleArray(round.items)
+            }));
+
+            function renderGame6() {
+                if (gameFailed) {
+                    app.innerHTML = `
+                        <div class="soft-screen">
+                            <div class="game-container glass-card">
+                                <div class="game-header glass-card">
+                                    <div class="game-title gradient-text">🎮 НАЙДИ ЛИШНЕЕ</div>
+                                    <div class="digit-box pulse">${collectedDigits[5] !== '_' ? '2' : '_'}</div>
+                                </div>
+                                
+                                <div class="game-over">
+                                    <h2 class="glitch-text" style="color: #f44336;">💔 ПРОИГРЫШ</h2>
+                                    <p>${MAX_MISTAKES} ошибки</p>
+                                    <button class="back-btn premium-button" id="restartBtn">🔄 ЗАНОВО</button>
+                                    <button class="back-btn premium-button" id="menuBtn">← В МЕНЮ</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('restartBtn').addEventListener('click', () => {
+                        currentRound = 0;
+                        score = 0;
+                        mistakes = 0;
+                        gameFailed = false;
+                        roundAnswered = false;
+                        selectedItem = null;
+                        shuffledRounds = game6Rounds.map(round => ({
+                            ...round,
+                            shuffledItems: shuffleArray(round.items)
+                        }));
+                        renderGame6();
+                    });
+
+                    document.getElementById('menuBtn').addEventListener('click', showGameMenu);
+                    return;
+                }
+
+                if (gameCompleted) {
+                    app.innerHTML = `
+                        <div class="soft-screen">
+                            <div class="game-container glass-card">
+                                <div class="game-header glass-card">
+                                    <div class="game-title gradient-text">🎮 НАЙДИ ЛИШНЕЕ</div>
+                                    <div class="digit-box pulse">2</div>
+                                </div>
+                                
+                                <div class="fact-card glass-card-deep">
+                                    <div class="fact-text" style="font-size: 24px;" class="gradient-text">🎉 ИГРА ПРОЙДЕНА!</div>
+                                    <div class="fact-text">Счёт: ${score}/${game6Rounds.length}</div>
+                                    <div class="fact-text">Ошибок: ${mistakes}/${MAX_MISTAKES}</div>
+                                </div>
+                                
+                                <button class="get-digit-btn premium-button" id="getDigitBtn6">🎁 ЦИФРА 2</button>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('getDigitBtn6').addEventListener('click', () => {
+                        collectedDigits[5] = '2';
+                        showGameMenu();
+                    });
+                    return;
+                }
+
+                const round = shuffledRounds[currentRound];
+                const correctIndex = round.shuffledItems.indexOf(round.correctItem);
+
+                let itemsHtml = '';
+                round.shuffledItems.forEach((item, idx) => {
+                    let itemClass = 'option-emoji';
+                    if (roundAnswered) {
+                        if (idx === correctIndex) {
+                            itemClass += ' selected-correct';
+                        } else if (selectedItem === idx && idx !== correctIndex) {
+                            itemClass += ' selected-wrong';
+                        }
+                    }
+                    itemsHtml += `<div class="${itemClass}" data-index="${idx}">${item}</div>`;
+                });
+
+                app.innerHTML = `
+                    <div class="soft-screen">
+                        <div class="game-container glass-card">
+                            <div class="game-header glass-card">
+                                <div class="game-title gradient-text">🎮 НАЙДИ ЛИШНЕЕ</div>
+                                <div class="digit-box pulse">${collectedDigits[5] !== '_' ? '2' : '_'}</div>
+                            </div>
+
+                            <div class="error-counter">
+                                ❌ <span class="error-badge">${mistakes}/${MAX_MISTAKES}</span>
+                            </div>
+
+                            <div class="score">${currentRound + 1}/${game6Rounds.length} · ${score}</div>
+
+                            <div class="options-grid glass-card-deep" id="optionsGrid">
+                                ${itemsHtml}
+                            </div>
+
+                            ${roundAnswered ? 
+                                `<div class="explanation glass-card">
+                                    ${round.explanation}
+                                </div>` : 
+                                ''
+                            }
+
+                            ${roundAnswered && currentRound < game6Rounds.length - 1 ? 
+                                `<button class="next-btn premium-button" id="nextRoundBtn">→</button>` : 
+                                (roundAnswered && currentRound === game6Rounds.length - 1 ?
+                                    `<button class="get-digit-btn premium-button" id="finishGame6Btn">✅ ЗАВЕРШИТЬ</button>` : 
+                                    ''
+                                )
+                            }
+                        </div>
+                    </div>
+                `;
+
+                document.querySelectorAll('.option-emoji').forEach(el => {
+                    el.addEventListener('click', () => {
+                        if (roundAnswered) return;
+                        
+                        const idx = parseInt(el.dataset.index);
+                        selectedItem = idx;
+                        roundAnswered = true;
+                        
+                        if (idx === correctIndex) {
+                            score++;
+                        } else {
+                            mistakes++;
+                            if (mistakes >= MAX_MISTAKES) {
+                                gameFailed = true;
+                            }
+                        }
+                        
+                        renderGame6();
+                    });
+                });
+
+                if (document.getElementById('nextRoundBtn')) {
+                    document.getElementById('nextRoundBtn').addEventListener('click', () => {
+                        currentRound++;
+                        roundAnswered = false;
+                        selectedItem = null;
+                        renderGame6();
+                    });
+                }
+
+                if (document.getElementById('finishGame6Btn')) {
+                    document.getElementById('finishGame6Btn').addEventListener('click', () => {
+                        gameCompleted = true;
+                        renderGame6();
+                    });
+                }
+            }
+
+            renderGame6();
+        }
+
+        // ========== ИГРА 7 ==========
+        function showGame7() {
+            let gameCompleted = collectedDigits[6] !== '_';
+            let errorMessage = '';
+
+            function renderGame7() {
+                if (gameCompleted) {
+                    app.innerHTML = `
+                        <div class="soft-screen">
+                            <div class="game-container glass-card">
+                                <div class="game-header glass-card">
+                                    <div class="game-title gradient-text">🎮 ШИФР</div>
+                                    <div class="digit-box pulse">7</div>
+                                </div>
+                                
+                                <div class="fact-card glass-card-deep">
+                                    <div class="fact-text" style="font-size: 24px;" class="gradient-text">🔓 КОД ПРИНЯТ!</div>
+                                    <div class="fact-text">Цифра 7 получена</div>
+                                </div>
+                                
+                                <button class="get-digit-btn premium-button" id="getDigitBtn7">🎁 ЦИФРА 7</button>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('getDigitBtn7').addEventListener('click', () => {
+                        collectedDigits[6] = '7';
+                        showGameMenu();
+                    });
+                    return;
+                }
+
+                app.innerHTML = `
+                    <div class="soft-screen">
+                        <div class="game-container glass-card">
+                            <div class="game-header glass-card">
+                                <div class="game-title gradient-text">🎮 ШИФР</div>
+                                <div class="digit-box pulse">${collectedDigits[6] !== '_' ? '7' : '_'}</div>
+                            </div>
+
+                            <div class="fact-card glass-card-deep">
+                                <div class="cipher-container">
+                                    <p style="font-size: 16px; color: #ff69b4;">🔐 ВВЕДИ КОД</p>
+                                    
+                                    <div class="cipher-numbers glitch-text" style="font-size: 48px; letter-spacing: 10px;">
+                                        ???
+                                    </div>
+                                    
+                                    <div class="hint">
+                                        Подсказка: МОЁ ЛЮБИМОЁ ЧИСЛО.
+                                    </div>
+
+                                    <div class="input-group">
+                                        <input 
+                                            type="text" 
+                                            id="cipherInput" 
+                                            class="cipher-input glass-card" 
+                                            placeholder="Введи код"
+                                            maxlength="3"
+                                            inputmode="numeric"
+                                            pattern="[0-9]*"
+                                        >
+                                        <button class="premium-button" id="checkBtn" style="padding: 12px;">ПРОВЕРИТЬ</button>
+                                    </div>
+
+                                    ${errorMessage ? 
+                                        `<div class="error-message">❌ ${errorMessage}</div>` : 
+                                        ''
+                                    }
+                                </div>
+                            </div>
+
+                            <button class="back-btn premium-button" id="menuBtn">← МЕНЮ</button>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('checkBtn').addEventListener('click', () => {
+                    const answer = document.getElementById('cipherInput').value.trim();
+                    
+                    if (answer === '993') {
+                        gameCompleted = true;
+                        renderGame7();
+                    } else {
+                        errorMessage = 'Неверно, попробуй ещё';
+                        renderGame7();
+                    }
+                });
+
+                document.getElementById('menuBtn').addEventListener('click', showGameMenu);
+                
+                document.getElementById('cipherInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        document.getElementById('checkBtn').click();
+                    }
+                });
+            }
+
+            renderGame7();
+        }
+
+        // ========== ЗАПУСК ==========
+        createPremiumParticles();
+        createBinaryRain();
+        setInterval(createBinaryRain, 25000);
+        
+        showLogin();
+    </script>
+</body>
+</html>
